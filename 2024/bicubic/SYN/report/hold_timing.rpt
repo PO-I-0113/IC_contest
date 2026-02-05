@@ -1,0 +1,49 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 1
+Design : Bicubic
+Version: S-2021.06-SP2
+Date   : Thu Jan 15 14:10:50 2026
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: u_BICUBIC/pixel_reg[4]
+              (rising edge-triggered flip-flop clocked by CLK)
+  Endpoint: u_ResultSRAM
+            (rising edge-triggered flip-flop clocked by CLK)
+  Path Group: CLK
+  Path Type: min
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  Bicubic            tsmc13_wl10           slow
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock CLK (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.50       0.50
+  u_BICUBIC/pixel_reg[4]/CK (DFFRX2)       0.00       0.50 r
+  u_BICUBIC/pixel_reg[4]/Q (DFFRX2)        0.39       0.89 r
+  u_BICUBIC/pixel[4] (BICUBIC)             0.00       0.89 r
+  u_ResultSRAM/D[4] (ResultSRAM)           0.00       0.89 r
+  data arrival time                                   0.89
+
+  clock CLK (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.50       0.50
+  clock uncertainty                        0.10       0.60
+  u_ResultSRAM/CLK (ResultSRAM)            0.00       0.60 r
+  library hold time                        0.00       0.60
+  data required time                                  0.60
+  -----------------------------------------------------------
+  data required time                                  0.60
+  data arrival time                                  -0.89
+  -----------------------------------------------------------
+  slack (MET)                                         0.29
+
+
+1

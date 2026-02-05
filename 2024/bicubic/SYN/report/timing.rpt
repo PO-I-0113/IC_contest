@@ -1,0 +1,76 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : Bicubic
+Version: S-2021.06-SP2
+Date   : Thu Jan 15 14:10:50 2026
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: u_cubic_data_counter/cubic_data_count_reg[0]
+              (rising edge-triggered flip-flop clocked by CLK)
+  Endpoint: u_Bicubic_coefficient/coefficient_a_reg[10]
+            (rising edge-triggered flip-flop clocked by CLK)
+  Path Group: CLK
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  Bicubic            tsmc13_wl10           slow
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock CLK (rise edge)                                   0.00       0.00
+  clock network delay (ideal)                             0.50       0.50
+  u_cubic_data_counter/cubic_data_count_reg[0]/CK (DFFRX4)
+                                                          0.00       0.50 r
+  u_cubic_data_counter/cubic_data_count_reg[0]/Q (DFFRX4)
+                                                          0.63       1.13 r
+  u_cubic_data_counter/cubic_data_count[0] (cubic_data_counter)
+                                                          0.00       1.13 r
+  u_Bicubic_coefficient/cubic_data_count[0] (Bicubic_coefficient)
+                                                          0.00       1.13 r
+  u_Bicubic_coefficient/U44/Y (CLKINVX1)                  0.32       1.45 f
+  u_Bicubic_coefficient/U39/Y (NOR2X1)                    0.57       2.02 r
+  u_Bicubic_coefficient/U38/Y (INVX3)                     0.44       2.46 f
+  u_Bicubic_coefficient/U37/Y (INVX4)                     0.61       3.07 r
+  u_Bicubic_coefficient/U87/Y (AOI22X1)                   0.25       3.32 f
+  u_Bicubic_coefficient/U201/Y (OAI211X1)                 0.48       3.80 r
+  u_Bicubic_coefficient/U51/Y (INVXL)                     0.25       4.05 f
+  u_Bicubic_coefficient/U213/CO (ADDFXL)                  0.73       4.79 f
+  u_Bicubic_coefficient/U24/CO (ADDFXL)                   0.53       5.31 f
+  u_Bicubic_coefficient/U56/CO (ADDFXL)                   0.53       5.84 f
+  u_Bicubic_coefficient/U17/CO (ADDFXL)                   0.53       6.37 f
+  u_Bicubic_coefficient/U16/CO (ADDFXL)                   0.53       6.90 f
+  u_Bicubic_coefficient/U13/S (ADDFXL)                    0.82       7.72 r
+  u_Bicubic_coefficient/DP_OP_40J1_125_3082/U33/S (CMPR42X1)
+                                                          0.78       8.50 f
+  u_Bicubic_coefficient/U181/CO (ADDFX2)                  0.45       8.95 f
+  u_Bicubic_coefficient/U180/CO (ADDFX2)                  0.37       9.32 f
+  u_Bicubic_coefficient/U97/CO (ADDFX2)                   0.36       9.68 f
+  u_Bicubic_coefficient/U224/Y (XNOR2X1)                  0.21       9.89 f
+  u_Bicubic_coefficient/U62/Y (AO22X1)                    0.38      10.27 f
+  u_Bicubic_coefficient/coefficient_a_reg[10]/D (DFFRX2)
+                                                          0.00      10.27 f
+  data arrival time                                                 10.27
+
+  clock CLK (rise edge)                                  10.00      10.00
+  clock network delay (ideal)                             0.50      10.50
+  clock uncertainty                                      -0.10      10.40
+  u_Bicubic_coefficient/coefficient_a_reg[10]/CK (DFFRX2)
+                                                          0.00      10.40 r
+  library setup time                                     -0.13      10.27
+  data required time                                                10.27
+  --------------------------------------------------------------------------
+  data required time                                                10.27
+  data arrival time                                                -10.27
+  --------------------------------------------------------------------------
+  slack (MET)                                                        0.00
+
+
+1
