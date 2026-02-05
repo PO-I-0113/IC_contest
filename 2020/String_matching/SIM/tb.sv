@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-`define CYCLE      8.5  
+`define CYCLE      20.0
 `define SDFFILE    "../SYN/SME_syn.sdf"
 `define End_CYCLE  1000000
 `define PAT        "Btestdata.txt"
