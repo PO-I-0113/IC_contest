@@ -3,7 +3,7 @@
 Report : area
 Design : IOTDF
 Version: S-2021.06-SP2
-Date   : Thu Feb  5 23:13:21 2026
+Date   : Thu Feb  5 23:21:32 2026
 ****************************************
 
 Information: Updating design information... (UID-85)
@@ -12,21 +12,21 @@ Library(s) Used:
     slow (File: /mnt2/CBDK_TSMC_130nm_Arm_v2.5/SynopsysDC/db/slow.db)
 
 Number of ports:                         1061
-Number of nets:                          5834
-Number of cells:                         4250
-Number of combinational cells:           3328
+Number of nets:                          6053
+Number of cells:                         4411
+Number of combinational cells:           3489
 Number of sequential cells:               914
 Number of macros/black boxes:               0
-Number of buf/inv:                        751
-Number of references:                      38
+Number of buf/inv:                        814
+Number of references:                      41
 
-Combinational area:              27112.570028
-Buf/Inv area:                     3408.379148
+Combinational area:              28119.128080
+Buf/Inv area:                     3629.041144
 Noncombinational area:           29475.350002
 Macro/Black Box area:                0.000000
 Net Interconnect area:      undefined  (No wire load specified)
 
-Total cell area:                 56587.920030
+Total cell area:                 57594.478082
 Total area:                 undefined
 
 Hierarchical area distribution
@@ -37,11 +37,11 @@ Hierarchical area distribution
 Hierarchical cell                 Absolute    Percent  Combi-      Noncombi-   Black-
                                   Total       Total    national    national    boxes   Design
 --------------------------------  ----------  -------  ----------  ----------  ------  ----------------
-IOTDF                             56587.9200    100.0  15850.3211  29475.3500  0.0000  IOTDF
-u_ave_value/add_509                5528.4317      9.8   5528.4317      0.0000  0.0000  IOTDF_DW01_add_1
-u_peakmax_finder/gt_585            2866.9086      5.1   2866.9086      0.0000  0.0000  IOTDF_DW_cmp_1
-u_peakmin_finder/lt_628            2866.9086      5.1   2866.9086      0.0000  0.0000  IOTDF_DW_cmp_0
+IOTDF                             57594.4781    100.0  16091.3518  29475.3500  0.0000  IOTDF
+u_ave_value/add_509                6293.9591     10.9   6293.9591      0.0000  0.0000  IOTDF_DW01_add_1
+u_peakmax_finder/gt_585            2866.9086      5.0   2866.9086      0.0000  0.0000  IOTDF_DW_cmp_1
+u_peakmin_finder/lt_628            2866.9086      5.0   2866.9086      0.0000  0.0000  IOTDF_DW_cmp_0
 --------------------------------  ----------  -------  ----------  ----------  ------  ----------------
-Total                                                  27112.5700  29475.3500  0.0000
+Total                                                  28119.1281  29475.3500  0.0000
 
 1
