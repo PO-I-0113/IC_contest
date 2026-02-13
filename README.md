@@ -26,78 +26,117 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 | Year | Problem Name | Module Name | Category | Description |
 | :--- | :--- | :--- | :--- | :--- |
+| **2025** | CONVEX | `CONVEX` | Computational Geometry | 凸包演算法硬體實作 |
 | **2024** | Bicubic Interpolation | `Bicubic` | Image Processing | 雙三次插值影像處理硬體實作 |
 | **2024** | HMC | `HMC` | Signal Processing | 硬體加速器設計 |
+| **2021** | Geofence | `geofence` | Location Processing | 地理圍欄演算法硬體實作 |
 | **2020** | String Matching Engine | `SME` | String Processing | 字串匹配引擎硬體實作 |
 | **2020** | SCE | `SCE` | Signal Processing | 信號處理器設計 |
+| **2019** | GPS Data Compression | `GPSDC` | Data Compression | GPS 數據壓縮硬體實作 |
 | **2019** | Image Convolutional | `CONV` | Image Processing | 影像卷積神經網路硬體加速器 |
 | **2019** | IoT Data Filter | `IOTDF` | Data Processing | 物聯網數據過濾器 |
 | **2018** | Huffman Encoder | `huffman` | Data Compression | 霍夫曼編碼器硬體實作 |
+| **2018** | LCD Controller | `LCD_CTRL` | Display Control | LCD 控制器設計 |
 | **2018** | Register File | `RFILE` | Memory Design | 暫存器檔案設計 |
+| **2018** | TPA | `TPA` | Signal Processing | 信號處理加速器設計 |
 
 ## 📂 Directory Structure
 
 ```text
 .
+├── 2025/
+│   └── CONVEX/               # CONVEX Algorithm
+│       ├── CONVEX.v         # RTL source file
+│       ├── tb.sv            # Testbench
+│       ├── dc_syn.tcl       # Synthesis script
+│       └── CONVEX.sdc       # Timing constraints
 ├── 2024/
 │   ├── bicubic/              # Bicubic Interpolation
 │   │   ├── RTL/              # RTL source files
 │   │   ├── SIM/              # Simulation testbenches
 │   │   ├── SYN/              # Synthesis scripts and reports
-│   │   ├── DFT/              # DFT/ATPG scripts (optional)
-│   │   ├── prime_time/       # PrimeTime scripts (optional)
-│   │   ├── work/             # Build outputs and logs
-│   │   └── Makefile          # Build automation script
+│   │   └── work/             # Build outputs and logs
 │   └── HMC/                  # HMC Accelerator
 │       └── icc2024cb/
 │           ├── RTL/          # RTL source files
 │           ├── SIM/          # Simulation testbenches
 │           ├── SYN/          # Synthesis scripts and reports
-│           ├── DFT/          # DFT/ATPG scripts (optional)
-│           ├── prime_time/   # PrimeTime scripts (optional)
-│           ├── work/         # Build outputs and logs
-│           └── Makefile      # Build automation script
+│           ├── mem/          # Memory models
+│           └── vcs/          # VCS simulation files
+├── 2021/
+│   └── geofence/             # Geofence Algorithm
+│       ├── geofence.v        # RTL source file
+│       ├── tb.sv             # Testbench
+│       ├── dc_syn.tcl        # Synthesis script
+│       └── geofence.sdc      # Timing constraints
 ├── 2020/
 │   ├── String_matching/      # String Matching Engine (SME)
 │   │   ├── RTL/              # RTL source files
 │   │   ├── SIM/              # Simulation testbenches
-│   │   ├── SYN/              # Synthesis scripts and reports
-│   │   └── Makefile          # Build automation script
+│   │   └── SYN/              # Synthesis scripts and reports
 │   └── SCE/                  # SCE Processor
-│       └── icc2020cb/
-│           ├── RTL/          # RTL source files
-│           ├── SIM/          # Simulation testbenches
-│           ├── SYN/          # Synthesis scripts and reports
-│           └── Makefile      # Build automation script
+│       ├── RTL/              # RTL source files
+│       ├── SIM/              # Simulation testbenches
+│       ├── SYN/              # Synthesis scripts and reports
+│       ├── DFT/              # DFT/ATPG scripts
+│       ├── prime_time/      # PrimeTime scripts
+│       ├── work/             # Build outputs and logs
+│       ├── sram_1024x12/     # SRAM memory models
+│       ├── sram_8192x12/     # SRAM memory models
+│       └── rom_32768x8/      # ROM memory models
 ├── 2019/
+│   ├── GPSDC/                # GPS Data Compression
+│   │   ├── GPSDC.v           # RTL source file
+│   │   ├── testbench.v       # Testbench
+│   │   └── GPSDC.sdc        # Timing constraints
 │   ├── Image_convolutional/   # Image Convolutional Neural Network
 │   │   ├── RTL/              # RTL source files (CONV.sv)
 │   │   ├── SIM/              # Simulation testbenches
 │   │   ├── SYN/              # Synthesis scripts and reports
-│   │   └── Makefile          # Build automation script
+│   │   ├── DFT/              # DFT/ATPG scripts
+│   │   ├── prime_time/       # PrimeTime scripts
+│   │   └── work/             # Build outputs and logs
 │   └── IOTDF/                # IoT Data Filter
 │       ├── RTL/              # RTL source files (IOTDF.v)
 │       ├── SIM/              # Simulation testbenches
 │       ├── SYN/              # Synthesis scripts and reports
-│       └── Makefile          # Build automation script
+│       ├── Prime_time/       # PrimeTime scripts
+│       └── work/             # Build outputs and logs
 ├── 2018/
 │   ├── hufffman/             # Huffman Encoder
 │   │   └── B_ICC2018_priliminary_grad_cell_based/
 │   │       ├── RTL/          # RTL source files
 │   │       ├── SIM/          # Simulation testbenches
-│   │       ├── SYN/          # Synthesis scripts and reports
-│   │       └── Makefile      # Build automation script
-│   └── RF/                   # Register File
-│       └── B_ICC2018_grad_cell-based/
-│           ├── RTL/          # RTL source files (RFILE.v)
-│           ├── SIM/          # Simulation testbenches
-│           ├── SYN/          # Synthesis scripts and reports
-│           └── Makefile      # Build automation script
+│   │       └── SYN/          # Synthesis scripts and reports
+│   ├── LCD_CTRL/             # LCD Controller
+│   │   ├── RTL/              # RTL source files
+│   │   ├── SIM/              # Simulation testbenches
+│   │   ├── SYN/              # Synthesis scripts and reports
+│   │   └── work/             # Build outputs and logs
+│   ├── RF/                   # Register File
+│   │   └── B_ICC2018_grad_cell-based/
+│   │       ├── RTL/          # RTL source files (RFILE.v)
+│   │       ├── SIM/          # Simulation testbenches
+│   │       └── SYN/          # Synthesis scripts and reports
+│   └── TPA/                  # TPA Signal Processor
+│       ├── RTL/              # RTL source files
+│       ├── SIM/              # Simulation testbenches
+│       ├── SYN/              # Synthesis scripts and reports
+│       ├── DFT/              # DFT/ATPG scripts
+│       ├── prime_time/       # PrimeTime scripts
+│       └── work/             # Build outputs and logs
 ├── Makefile                  # Root Makefile template
 └── README.md
 ```
 
 ## 📝 Project Details
+
+### 2025 Projects
+
+#### CONVEX (`CONVEX/`)
+- **Module:** `CONVEX.v`
+- **Description:** 凸包演算法硬體實作，用於計算幾何問題
+- **Key Features:** 凸包計算、座標處理、硬體加速
 
 ### 2024 Projects
 
@@ -111,6 +150,13 @@ Each project involves translating algorithmic specifications into synthesizable 
 - **Description:** 硬體加速器設計，包含處理單元陣列(PE Array)
 - **Key Features:** 雙時鐘域設計、SRAM/ROM 記憶體介面
 
+### 2021 Projects
+
+#### Geofence (`geofence/`)
+- **Module:** `geofence.v`
+- **Description:** 地理圍欄演算法硬體實作，用於位置判斷
+- **Key Features:** 座標計算、區域判斷、硬體加速
+
 ### 2020 Projects
 
 #### String Matching Engine (`String_matching/`)
@@ -118,12 +164,17 @@ Each project involves translating algorithmic specifications into synthesizable 
 - **Description:** 高效能字串匹配引擎硬體實作
 - **Key Features:** 並行比較邏輯、狀態機設計
 
-#### SCE (`SCE/icc2020cb/`)
+#### SCE (`SCE/`)
 - **Module:** `SCE.v`
-- **Description:** 信號處理器設計
-- **Key Features:** 閾值處理、記憶體管理
+- **Description:** 信號處理器設計，支援 DFT 與 PrimeTime 分析
+- **Key Features:** 信號處理、記憶體管理、DFT 測試
 
 ### 2019 Projects
+
+#### GPS Data Compression (`GPSDC/`)
+- **Module:** `GPSDC.v`
+- **Description:** GPS 數據壓縮硬體實作
+- **Key Features:** 數據壓縮、GPS 座標處理
 
 #### Image Convolutional (`Image_convolutional/`)
 - **Module:** `CONV.sv`
@@ -133,6 +184,7 @@ Each project involves translating algorithmic specifications into synthesizable 
   - Max Pooling 硬體實作
   - ReLU 激活函數
   - 多層資料流控制
+  - DFT 測試支援
 
 #### IoT Data Filter (`IOTDF/`)
 - **Module:** `IOTDF.v`
@@ -141,6 +193,7 @@ Each project involves translating algorithmic specifications into synthesizable 
   - 最大值/最小值/平均值計算
   - 峰值檢測
   - 數據提取與排除功能
+  - PrimeTime 時序分析
 
 ### 2018 Projects
 
@@ -149,10 +202,20 @@ Each project involves translating algorithmic specifications into synthesizable 
 - **Description:** 霍夫曼編碼器硬體實作，用於數據壓縮
 - **Key Features:** 動態編碼表生成、位元流輸出
 
+#### LCD Controller (`LCD_CTRL/`)
+- **Module:** `LCD_CTRL.sv`
+- **Description:** LCD 控制器設計，用於顯示控制
+- **Key Features:** 顯示控制、時序管理、介面設計
+
 #### Register File (`RF/`)
 - **Module:** `RFILE.v`
 - **Description:** 高效能暫存器檔案設計
 - **Key Features:** 流水線設計、多端口讀寫
+
+#### TPA (`TPA/`)
+- **Module:** TPA Signal Processor
+- **Description:** 信號處理加速器設計，支援 DFT 與 PrimeTime 分析
+- **Key Features:** 信號處理、DFT 測試、時序分析
 
 ## 🔧 Usage
 
