@@ -1,0 +1,70 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : TPA
+Version: S-2021.06-SP2
+Date   : Fri Feb 13 18:14:11 2026
+****************************************
+
+ # A fanout number of 1000 was used for high fanout net computations.
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: TWP_address_reg[3]
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: SDA_mine_reg
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Des/Clust/Port     Wire Load Model       Library
+  ------------------------------------------------
+  TPA                tsmc13_wl10           slow
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  clock clk (rise edge)                    0.00       0.00
+  clock network delay (ideal)              0.50       0.50
+  TWP_address_reg[3]/CK (DFFRX1)           0.00 #     0.50 r
+  TWP_address_reg[3]/Q (DFFRX1)            0.75       1.25 f
+  U25116/Y (NOR2X1)                        0.67       1.91 r
+  U14817/Y (AND2X2)                        0.26       2.18 r
+  U14818/Y (CLKINVX1)                      0.19       2.36 f
+  U14319/Y (CLKBUFX3)                      0.40       2.76 f
+  U13703/Y (CLKBUFX3)                      0.46       3.21 f
+  U13126/Y (CLKBUFX3)                      0.47       3.69 f
+  U12539/Y (CLKBUFX3)                      0.86       4.54 f
+  U25998/Y (OAI22XL)                       0.61       5.16 r
+  U26000/Y (NOR4X1)                        0.27       5.43 f
+  U26001/Y (AO22X1)                        0.45       5.88 f
+  U26002/Y (AOI221XL)                      0.52       6.40 r
+  U26129/Y (NAND4X1)                       0.71       7.11 f
+  U27878/Y (AO22X1)                        0.55       7.65 f
+  U27879/Y (AOI221XL)                      0.48       8.13 r
+  U27882/Y (OA22X1)                        0.36       8.49 r
+  U27888/Y (OAI2BB2XL)                     0.20       8.69 f
+  U14809/Y (AOI221XL)                      0.65       9.34 r
+  U14807/Y (OAI32X1)                       0.32       9.67 f
+  U22923/Y (AOI21X1)                       0.28       9.95 r
+  U22922/Y (OAI211X1)                      0.21      10.16 f
+  SDA_mine_reg/D (DFFRX1)                  0.00      10.16 f
+  data arrival time                                  10.16
+
+  clock clk (rise edge)                   10.00      10.00
+  clock network delay (ideal)              0.50      10.50
+  clock uncertainty                       -0.10      10.40
+  SDA_mine_reg/CK (DFFRX1)                 0.00      10.40 r
+  library setup time                      -0.24      10.16
+  data required time                                 10.16
+  -----------------------------------------------------------
+  data required time                                 10.16
+  data arrival time                                 -10.16
+  -----------------------------------------------------------
+  slack (MET)                                         0.00
+
+
+1

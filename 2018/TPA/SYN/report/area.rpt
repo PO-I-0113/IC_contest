@@ -1,0 +1,30 @@
+ 
+****************************************
+Report : area
+Design : TPA
+Version: S-2021.06-SP2
+Date   : Fri Feb 13 18:14:11 2026
+****************************************
+
+Library(s) Used:
+
+    slow (File: /mnt2/CBDK_TSMC_130nm_Arm_v2.5/SynopsysDC/db/slow.db)
+
+Number of ports:                           47
+Number of nets:                         26570
+Number of cells:                        22426
+Number of combinational cells:          18289
+Number of sequential cells:              4137
+Number of macros/black boxes:               0
+Number of buf/inv:                       3127
+Number of references:                     137
+
+Combinational area:             185459.624357
+Buf/Inv area:                    33126.458547
+Noncombinational area:          134384.851001
+Macro/Black Box area:                0.000000
+Net Interconnect area:         3657611.760773
+
+Total cell area:                319844.475358
+Total area:                    3977456.236130
+1
