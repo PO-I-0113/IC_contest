@@ -234,6 +234,32 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 本專案使用 Makefile 自動化整個 IC 設計流程，從 RTL 模擬到合成、ATPG 與靜態時序分析。
 
+#### 前置準備
+
+**重要：使用 Makefile 前，請先完成以下步驟：**
+
+1. **創建 work 資料夾**
+   ```bash
+   mkdir work
+   ```
+
+2. **將 Makefile 複製到 work 資料夾**
+   ```bash
+   cp Makefile work/
+   ```
+
+3. **進入 work 資料夾**
+   ```bash
+   cd work
+   ```
+
+4. **執行 make start 建立專案結構**
+   ```bash
+   make start
+   ```
+
+> **注意**：Makefile 必須放在 `work/` 資料夾內才能正常運作，因為 Makefile 中的路徑設定是相對於 work 資料夾的。
+
 #### 基本指令
 
 ```bash
@@ -306,9 +332,18 @@ make sim_gate SIM=xrun PATTERN=tb1
 
 ```bash
 # 1. 進入專案目錄
-cd 2024/bicubic/work
+cd 2024/bicubic
 
-# 2. 建立專案結構（首次使用）
+# 2. 創建 work 資料夾（如果尚未存在）
+mkdir -p work
+
+# 3. 將 Makefile 複製到 work 資料夾
+cp ../../Makefile work/
+
+# 4. 進入 work 資料夾
+cd work
+
+# 5. 建立專案結構（首次使用）
 make start
 
 # 3. 執行 RTL 模擬驗證功能
