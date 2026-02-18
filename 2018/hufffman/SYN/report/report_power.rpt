@@ -1,0 +1,64 @@
+Information: Propagating switching activity (low effort zero delay simulation). (PWR-6)
+Warning: Design has unannotated primary inputs. (PWR-414)
+Warning: Design has unannotated sequential cell outputs. (PWR-415)
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : huffman
+Version: S-2021.06-SP2
+Date   : Thu Oct 30 17:31:05 2025
+****************************************
+
+
+Library(s) Used:
+
+    fsa0m_a_generic_core_ss1p62v125c (File: /mnt2/CBDK_UMC_180nm_Faraday_v1.1/orig_lib/fsa0m_a/2009Q2v2.0/GENERIC_CORE/FrontEnd/synopsys/fsa0m_a_generic_core_ss1p62v125c.db)
+    fsa0m_a_t33_generic_io_ss1p62v125c (File: /mnt2/CBDK_UMC_180nm_Faraday_v1.1/orig_lib/fsa0m_a/2008Q3v1.2/T33_GENERIC_IO/FrontEnd/synopsys/fsa0m_a_t33_generic_io_ss1p62v125c.db)
+
+
+Operating Conditions: WCCOM   Library: fsa0m_a_generic_core_ss1p62v125c
+Wire Load Model Mode: enclosed
+
+Design        Wire Load Model            Library
+------------------------------------------------
+huffman                enG50K            fsa0m_a_generic_core_ss1p62v125c
+calculate_test_1       enG5K             fsa0m_a_generic_core_ss1p62v125c
+group_devide_test_1    enG5K             fsa0m_a_generic_core_ss1p62v125c
+point_test_1           enG5K             fsa0m_a_generic_core_ss1p62v125c
+serial_counter_test_1  enG5K             fsa0m_a_generic_core_ss1p62v125c
+sort_count_test_1      enG5K             fsa0m_a_generic_core_ss1p62v125c
+sort_test_1            enG5K             fsa0m_a_generic_core_ss1p62v125c
+FSM_control_test_1     enG5K             fsa0m_a_generic_core_ss1p62v125c
+
+
+Global Operating Voltage = 1.62 
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1pW
+
+
+  Cell Internal Power  = 630.5731 uW   (78%)
+  Net Switching Power  = 181.1647 uW   (22%)
+                         ---------
+Total Dynamic Power    = 811.7379 uW  (100%)
+
+Cell Leakage Power     =   3.3535 uW
+
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad             0.1738            0.1086        1.7934e+06            0.2842  (  34.87%)
+memory             0.0000            0.0000            0.0000            0.0000  (   0.00%)
+black_box          0.0000            0.0000            0.0000            0.0000  (   0.00%)
+clock_network      0.0000            0.0000            0.0000            0.0000  (   0.00%)
+register           0.4381        1.8194e-02        8.0451e+05            0.4571  (  56.08%)
+sequential         0.0000            0.0000            0.0000            0.0000  (   0.00%)
+combinational  1.8662e-02        5.4359e-02        7.5553e+05        7.3777e-02  (   9.05%)
+--------------------------------------------------------------------------------------------------
+Total              0.6306 mW         0.1812 mW     3.3535e+06 pW         0.8151 mW
+1

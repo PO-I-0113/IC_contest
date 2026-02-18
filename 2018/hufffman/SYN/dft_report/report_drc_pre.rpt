@@ -1,0 +1,42 @@
+In mode: all_dft...
+  Pre-DFT DRC enabled
+
+Information: Starting test design rule checking. (TEST-222)
+  Building model 'DW01_MUX'
+Information: Changed wire load model for 'DW01_MUX' from 'G5K' to 'enG5K'. (OPT-170)
+  Building model 'DW01_mmux_width2'
+Information: Changed wire load model for 'DW01_mmux_width2' from 'G5K' to 'enG5K'. (OPT-170)
+  Building model 'DW01_mmux_width3'
+Information: Changed wire load model for 'DW01_mmux_width3' from 'G5K' to 'enG5K'. (OPT-170)
+  Building model 'DW01_mmux_width4'
+Information: Changed wire load model for 'DW01_mmux_width4' from 'G5K' to 'enG5K'. (OPT-170)
+  Building model 'DW01_mmux_width5'
+Information: Changed wire load model for 'DW01_mmux_width5' from 'G5K' to 'enG5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'alt1' from '(none)' to 'G5K'. (OPT-170)
+Information: Changed wire load model for 'apparch' from '(none)' to 'G5K'. (OPT-170)
+  Loading test protocol
+  ...checking vector rules...
+  ...checking pre-dft rules...
+
+-----------------------------------------------------------------
+  DRC Report
+
+  Total violations: 0
+
+-----------------------------------------------------------------
+
+
+Test Design rule checking did not find violations
+Information: Test design rule checking completed. (TEST-123)
+Warning: The current design contains unmapped components. The output netlist might not be read back into the system. (TEST-268)
+1
