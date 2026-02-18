@@ -1,0 +1,44 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 21:54:51 2025
+****************************************
+
+Operating Conditions: fast   Library: fast
+Wire Load Model Mode: top
+
+  Startpoint: rssiA[0] (input port clocked by clk)
+  Endpoint: complementer/ab_com_rssiA_reg_0_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  input external delay                                  0.0000     1.0000 r
+  rssiA[0] (in)                                         0.0001     1.0001 r
+  complementer/rssiA[0] (complement_test_1)             0.0000     1.0001 r
+  complementer/ab_com_rssiA_reg_0_/D (SDFFSX1)          0.0000     1.0001 r
+  data arrival time                                                1.0001
+
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  clock uncertainty                                     0.1000     1.1000
+  complementer/ab_com_rssiA_reg_0_/CK (SDFFSX1)         0.0000     1.1000 r
+  library hold time                                    -0.1598     0.9402
+  data required time                                               0.9402
+  --------------------------------------------------------------------------
+  data required time                                               0.9402
+  data arrival time                                               -1.0001
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0599
+
+
+1

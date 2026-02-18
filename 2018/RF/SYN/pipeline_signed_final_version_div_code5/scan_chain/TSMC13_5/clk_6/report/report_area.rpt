@@ -1,0 +1,53 @@
+ 
+****************************************
+Report : area
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 18:55:50 2025
+****************************************
+
+Library(s) Used:
+
+    slow (File: /usr/cad/CBDK/CBDK_IC_Contest_v2.5/SynopsysDC/db/slow.db)
+
+Number of ports:                         1150
+Number of nets:                         15259
+Number of cells:                        12461
+Number of combinational cells:          11315
+Number of sequential cells:              1134
+Number of macros/black boxes:               0
+Number of buf/inv:                       1739
+Number of references:                       9
+
+Combinational area:             111174.606906
+Buf/Inv area:                     6316.025308
+Noncombinational area:           44028.857529
+Macro/Black Box area:                0.000000
+Net Interconnect area:      undefined  (No wire load specified)
+
+Total cell area:                155203.464435
+Total area:                 undefined
+
+Hierarchical area distribution
+------------------------------
+
+                                  Global cell area              Local cell area
+                                  --------------------  ------------------------------- 
+Hierarchical cell                 Absolute     Percent  Combi-       Noncombi-   Black-
+                                  Total        Total    national     national    boxes   Design
+--------------------------------  -----------  -------  -----------  ----------  ------  --------------------------------
+RFILE                             155203.4644    100.0      13.5792      0.0000  0.0000  RFILE
+busy_controlor                        42.4350      0.0       3.3948     39.0402  0.0000  busy_control_test_1
+cal_distancer                      17313.4799     11.2   13818.5333   3494.9465  0.0000  cal_distance_test_1
+caler_exp                           7146.0539      4.6    5435.0748   1710.9791  0.0000  cal_exp_test_1
+complementer                        2653.0361      1.7     210.4776   2442.5585  0.0000  complement_test_1
+constant_calculater                14122.3678      9.1    7573.7988   6548.5690  0.0000  constant_calculate_test_1
+counter_tester                       218.9646      0.1      56.0142    162.9504  0.0000  counter_test_test_1
+locationor                        113635.8364     73.2   38198.2895    687.4470  0.0000  location_test_1
+locationor/u_div_xt                37960.6529     24.5   22847.0036  15113.6493  0.0000  location_DW_div_pipe_J1_1_test_1
+locationor/u_div_yt                36789.4469     23.7   23001.4670  13787.9799  0.0000  location_DW_div_pipe_J1_0_test_1
+valid_controlor                       57.7116      0.0      16.9740     40.7376  0.0000  valid_control_test_1
+--------------------------------  -----------  -------  -----------  ----------  ------  --------------------------------
+Total                                                   111174.6069  44028.8575  0.0000
+
+1

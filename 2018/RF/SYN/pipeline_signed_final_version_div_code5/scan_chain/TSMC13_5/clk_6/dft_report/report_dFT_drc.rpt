@@ -1,0 +1,99 @@
+In mode: Internal_scan...
+  Design has scan chains in this mode
+  Design is scan routed
+  Post-DFT DRC enabled
+
+Information: Starting test design rule checking. (TEST-222)
+  Loading test protocol
+  ...basic checks...
+  ...basic sequential cell checks...
+  ...checking vector rules...
+  ...checking clock rules...
+  ...checking scan chain rules...
+  ...checking scan compression rules...
+  ...checking X-state rules...
+  ...checking tristate rules...
+  ...extracting scan details...
+
+-----------------------------------------------------------------
+  DRC Report
+
+  Total violations: 0
+
+-----------------------------------------------------------------
+
+
+Test Design rule checking did not find violations
+
+-----------------------------------------------------------------
+  Sequential Cell Report
+
+  0 out of 1134 sequential cells have violations
+
+-----------------------------------------------------------------
+
+SEQUENTIAL CELLS WITHOUT VIOLATIONS
+      * 818 cells are valid scan cells
+      * 316 cells are non-scan shift-register cells
+
+Information: Test design rule checking completed. (TEST-123)
+  Running test coverage estimation...
+ 90350 faults were added to fault list.
+ 0           59626  21815        0/0/11    75.83%      0.11
+ 0            7329  14486        0/0/16    83.95%      0.15
+ 0            3448  11038        0/0/22    87.77%      0.17
+ 0            1823   9215        0/0/29    89.79%      0.19
+ 0            1487   7728        0/0/37    91.44%      0.21
+ 0            1379   6349        0/0/41    92.97%      0.22
+ 0             910   5439        0/0/43    93.97%      0.24
+ 0             731   4708        0/0/47    94.78%      0.25
+ 0             760   3948        0/0/50    95.63%      0.27
+ 0             456   3492        0/0/54    96.13%      0.28
+ 0             387   3105        0/0/57    96.56%      0.29
+ 0             379   2726        0/0/63    96.98%      0.31
+ 0             223   2503        0/0/66    97.23%      0.32
+ 0             236   2267        0/0/69    97.49%      0.33
+ 0             191   2076        0/0/74    97.70%      0.34
+ 0             195   1881        0/0/77    97.92%      0.36
+ 0             158   1723        0/0/84    98.09%      0.37
+ 0             158   1565        0/0/88    98.27%      0.38
+ 0             134   1431        0/0/94    98.41%      0.40
+ 0             165   1266        0/0/99    98.60%      0.42
+ 0             146   1120       0/0/104    98.76%      0.43
+ 0             109   1011       0/0/108    98.88%      0.44
+ 0             101    910       0/0/115    98.99%      0.46
+ 0              98    812       0/0/120    99.10%      0.47
+ 0              99    713       0/0/125    99.21%      0.48
+ 0              80    633       0/0/129    99.30%      0.50
+ 0              81    552       0/0/135    99.39%      0.51
+ 0              84    468       0/0/139    99.48%      0.52
+ 0              81    387       0/0/141    99.57%      0.53
+ 0              60    327       0/0/150    99.64%      0.55
+ 0              70    257       0/0/150    99.72%      0.56
+ 0              67    190       0/0/150    99.79%      0.57
+ 0              68    122       0/0/150    99.86%      0.57
+ 0               7    115       0/0/150    99.87%      0.57
+ 
+            Pattern Summary Report
+ -----------------------------------------------
+ #internal patterns                           0
+ -----------------------------------------------
+ 
+
+     Uncollapsed Stuck Fault Summary Report
+ -----------------------------------------------
+ fault class                     code   #faults
+ ------------------------------  ----  ---------
+ Detected                         DT      90158
+ Possibly detected                PT          0
+ Undetectable                     UD         77
+ ATPG untestable                  AU          0
+ Not detected                     ND        115
+ -----------------------------------------------
+ total faults                             90350
+ test coverage                            99.87%
+ -----------------------------------------------
+  Information: The test coverage above may be inferior
+               than the real test coverage with customized
+               protocol and test simulation library.
+1

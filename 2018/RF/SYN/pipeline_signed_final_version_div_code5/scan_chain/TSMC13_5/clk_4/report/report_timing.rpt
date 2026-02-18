@@ -1,0 +1,76 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 22:08:16 2025
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: cal_distancer/distance_square_B_reg_21_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: locationor/u_div_xt/clk_r_REG79_S1
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  cal_distancer/distance_square_B_reg_21_/CK (SDFFRX4)
+                                                        0.0000     1.0000 r
+  cal_distancer/distance_square_B_reg_21_/Q (SDFFRX4)   0.4479     1.4479 f
+  cal_distancer/distance_square_B[21] (cal_distance_test_1)
+                                                        0.0000     1.4479 f
+  locationor/distance_square_B[21] (location_test_1)    0.0000     1.4479 f
+  locationor/U1039/Y (XOR2X4)                           0.1583     1.6061 r
+  locationor/U857/Y (NAND2X2)                           0.1309     1.7370 f
+  locationor/U3543/Y (OAI21X4)                          0.0951     1.8321 r
+  locationor/U997/Y (AOI21X2)                           0.0869     1.9190 f
+  locationor/U2092/Y (AOI2BB1X4)                        0.1860     2.1050 f
+  locationor/U2089/Y (OAI2BB1X4)                        0.0742     2.1792 r
+  locationor/U4636/Y (XOR2X4)                           0.1047     2.2839 r
+  locationor/U4226/Y (XOR2X4)                           0.1732     2.4571 r
+  locationor/U3281/Y (XOR2X4)                           0.1356     2.5927 r
+  locationor/U5585/Y (XOR2X4)                           0.2136     2.8064 f
+  locationor/U3377/Y (INVX8)                            0.0788     2.8852 r
+  locationor/U1284/Y (INVX12)                           0.0613     2.9465 f
+  locationor/U4038/Y (OAI22X4)                          0.1507     3.0972 r
+  locationor/U4778/S (ADDFHX4)                          0.3665     3.4638 f
+  locationor/U2699/Y (XOR2X4)                           0.0970     3.5608 r
+  locationor/U2950/Y (XOR2X4)                           0.1551     3.7159 f
+  locationor/U2949/Y (OAI21X4)                          0.1123     3.8282 r
+  locationor/U2691/Y (OAI2BB1X4)                        0.0916     3.9198 f
+  locationor/U2689/Y (XOR2X4)                           0.1016     4.0214 r
+  locationor/U3977/Y (XOR2X4)                           0.1497     4.1712 f
+  locationor/U18/Y (NOR2X4)                             0.0904     4.2616 r
+  locationor/U3879/Y (NOR2X4)                           0.0687     4.3303 f
+  locationor/U4146/Y (AOI21X4)                          0.1117     4.4420 r
+  locationor/U5442/Y (OAI21X1)                          0.0750     4.5170 f
+  locationor/U5443/Y (AOI21X1)                          0.1101     4.6271 r
+  locationor/U5444/Y (XOR2X1)                           0.1694     4.7965 f
+  locationor/u_div_xt/a[22] (location_DW_div_pipe_J1_1_test_1)
+                                                        0.0000     4.7965 f
+  locationor/u_div_xt/clk_r_REG79_S1/D (SDFFRHQX4)      0.0000     4.7965 f
+  data arrival time                                                4.7965
+
+  clock clk (rise edge)                                 4.0000     4.0000
+  clock network delay (ideal)                           1.0000     5.0000
+  clock uncertainty                                    -0.1000     4.9000
+  locationor/u_div_xt/clk_r_REG79_S1/CK (SDFFRHQX4)     0.0000     4.9000 r
+  library setup time                                   -0.1948     4.7052
+  data required time                                               4.7052
+  --------------------------------------------------------------------------
+  data required time                                               4.7052
+  data arrival time                                               -4.7965
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                -0.0913
+
+
+1

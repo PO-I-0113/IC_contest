@@ -1,0 +1,45 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 18:13:41 2025
+****************************************
+
+Operating Conditions: fast   Library: fast
+Wire Load Model Mode: top
+
+  Startpoint: rssiA[0] (input port clocked by clk)
+  Endpoint: complementer/ab_com_rssiA_reg_0_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: min
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  input external delay                                  0.0000     1.0000 r
+  rssiA[0] (in)                                         0.0001     1.0001 r
+  complementer/rssiA[0] (complement_test_1)             0.0000     1.0001 r
+  complementer/U4/Y (INVXL)                             0.0234     1.0236 f
+  complementer/ab_com_rssiA_reg_0_/D (SDFFRX1)          0.0000     1.0236 f
+  data arrival time                                                1.0236
+
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  clock uncertainty                                     0.1000     1.1000
+  complementer/ab_com_rssiA_reg_0_/CK (SDFFRX1)         0.0000     1.1000 r
+  library hold time                                    -0.1509     0.9491
+  data required time                                               0.9491
+  --------------------------------------------------------------------------
+  data required time                                               0.9491
+  data arrival time                                               -1.0236
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0744
+
+
+1

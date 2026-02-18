@@ -1,0 +1,68 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 18:13:40 2025
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: valueC[2] (input port clocked by clk)
+  Endpoint: cal_distancer/distance_square_C_reg_25_
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  input external delay                                  1.0000     2.0000 r
+  valueC[2] (in)                                        0.0002     2.0002 r
+  cal_distancer/valueC[2] (cal_distance_test_1)         0.0000     2.0002 r
+  cal_distancer/U9/Y (CLKINVX1)                         0.0750     2.0753 f
+  cal_distancer/U81/Y (NOR2XL)                          0.2331     2.3084 r
+  cal_distancer/mult_x_6_U85/CO (CMPR42X1)              0.7724     3.0808 f
+  cal_distancer/U513/CO (ADDFXL)                        0.6129     3.6936 f
+  cal_distancer/U512/CO (ADDFXL)                        0.3762     4.0698 f
+  cal_distancer/U511/CO (ADDFXL)                        0.3762     4.4460 f
+  cal_distancer/U510/CO (ADDFXL)                        0.3762     4.8221 f
+  cal_distancer/U311/CO (ADDFXL)                        0.3762     5.1983 f
+  cal_distancer/U258/CO (ADDFXL)                        0.3762     5.5744 f
+  cal_distancer/U244/CO (ADDFXL)                        0.3762     5.9506 f
+  cal_distancer/U259/CO (ADDFXL)                        0.3762     6.3267 f
+  cal_distancer/U260/CO (ADDFXL)                        0.3762     6.7029 f
+  cal_distancer/U261/CO (ADDFXL)                        0.3762     7.0790 f
+  cal_distancer/U262/CO (ADDFXL)                        0.3762     7.4552 f
+  cal_distancer/U263/CO (ADDFXL)                        0.3762     7.8313 f
+  cal_distancer/U264/CO (ADDFXL)                        0.3762     8.2075 f
+  cal_distancer/U265/CO (ADDFXL)                        0.3762     8.5836 f
+  cal_distancer/U266/CO (ADDFXL)                        0.3762     8.9598 f
+  cal_distancer/U267/CO (ADDFXL)                        0.3762     9.3359 f
+  cal_distancer/U268/CO (ADDFXL)                        0.3934     9.7294 f
+  cal_distancer/U33/CO (ADDFHX2)                        0.2117     9.9411 f
+  cal_distancer/U28/CO (ADDFX1)                         0.2555    10.1966 f
+  cal_distancer/U269/CO (ADDFXL)                        0.3299    10.5266 f
+  cal_distancer/distance_square_C_reg_25_/D (SDFFRX1)   0.0000    10.5266 f
+  data arrival time                                               10.5266
+
+  clock clk (rise edge)                                10.0000    10.0000
+  clock network delay (ideal)                           1.0000    11.0000
+  clock uncertainty                                    -0.1000    10.9000
+  cal_distancer/distance_square_C_reg_25_/CK (SDFFRX1)
+                                                        0.0000    10.9000 r
+  library setup time                                   -0.3733    10.5267
+  data required time                                              10.5267
+  --------------------------------------------------------------------------
+  data required time                                              10.5267
+  data arrival time                                              -10.5266
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0001
+
+
+1

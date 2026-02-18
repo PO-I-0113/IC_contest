@@ -1,0 +1,132 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 18:08:40 2025
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: locationor/u_div_yt/U_DIV_clk_r_REG142_S2
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: locationor/u_div_yt/U_DIV_clk_r_REG27_S3
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  locationor/u_div_yt/U_DIV_clk_r_REG142_S2/CK (SDFFSX1)
+                                                        0.0000     1.0000 r
+  locationor/u_div_yt/U_DIV_clk_r_REG142_S2/Q (SDFFSX1)
+                                                        0.5017     1.5017 r
+  locationor/u_div_yt/U372/Y (NOR2XL)                   0.1157     1.6174 f
+  locationor/u_div_yt/U374/Y (OAI21X2)                  0.1662     1.7837 r
+  locationor/u_div_yt/U138/Y (AOI222X1)                 0.1973     1.9810 f
+  locationor/u_div_yt/U146/Y (AOI2BB1X1)                0.2678     2.2487 f
+  locationor/u_div_yt/U670/Y (AOI211X4)                 0.4013     2.6500 r
+  locationor/u_div_yt/U679/Y (CLKMX2X2)                 0.2351     2.8852 f
+  locationor/u_div_yt/U132/Y (AOI222X1)                 0.3267     3.2118 r
+  locationor/u_div_yt/U680/Y (NOR2X1)                   0.1274     3.3393 f
+  locationor/u_div_yt/U386/Y (NOR2XL)                   0.1221     3.4614 r
+  locationor/u_div_yt/U385/Y (OAI21XL)                  0.1367     3.5981 f
+  locationor/u_div_yt/U387/Y (OAI21X1)                  0.1051     3.7031 r
+  locationor/u_div_yt/U12/Y (OAI211XL)                  0.1242     3.8273 f
+  locationor/u_div_yt/U682/Y (OAI21X1)                  0.1545     3.9819 r
+  locationor/u_div_yt/U684/Y (OAI21X2)                  0.1349     4.1167 f
+  locationor/u_div_yt/U685/Y (AOI222X1)                 0.3070     4.4237 r
+  locationor/u_div_yt/U686/Y (NOR2X1)                   0.1185     4.5422 f
+  locationor/u_div_yt/U688/Y (OAI31X1)                  0.2069     4.7491 r
+  locationor/u_div_yt/U689/Y (NOR3X2)                   0.1066     4.8557 f
+  locationor/u_div_yt/U7/Y (BUFX4)                      0.1655     5.0211 f
+  locationor/u_div_yt/U710/Y (CLKMX2X2)                 0.2023     5.2235 r
+  locationor/u_div_yt/U714/Y (NOR2BX1)                  0.1893     5.4128 r
+  locationor/u_div_yt/U400/Y (NOR2XL)                   0.0770     5.4898 f
+  locationor/u_div_yt/U399/Y (OAI21XL)                  0.2566     5.7464 r
+  locationor/u_div_yt/U401/Y (OAI21XL)                  0.1587     5.9051 f
+  locationor/u_div_yt/U717/Y (OAI211X1)                 0.1469     6.0520 r
+  locationor/u_div_yt/U718/Y (OAI21X2)                  0.1166     6.1686 f
+  locationor/u_div_yt/U720/Y (OAI21X2)                  0.1685     6.3371 r
+  locationor/u_div_yt/U721/Y (OAI21X2)                  0.0875     6.4246 f
+  locationor/u_div_yt/U722/Y (OAI21X2)                  0.0860     6.5106 r
+  locationor/u_div_yt/U723/Y (OAI21X2)                  0.1063     6.6169 f
+  locationor/u_div_yt/U724/Y (NOR2BX4)                  0.0937     6.7106 r
+  locationor/u_div_yt/U149/Y (OAI21X2)                  0.0893     6.7999 f
+  locationor/u_div_yt/U616/Y (NOR3X4)                   0.2165     7.0165 r
+  locationor/u_div_yt/U748/Y (CLKMX2X4)                 0.2638     7.2803 r
+  locationor/u_div_yt/U749/Y (AOI222X1)                 0.1514     7.4317 f
+  locationor/u_div_yt/U613/Y (NOR2XL)                   0.2686     7.7003 r
+  locationor/u_div_yt/U751/Y (NOR2X1)                   0.1123     7.8126 f
+  locationor/u_div_yt/U753/Y (OAI21X2)                  0.1278     7.9404 r
+  locationor/u_div_yt/U754/Y (OAI21XL)                  0.1030     8.0433 f
+  locationor/u_div_yt/U755/Y (OAI211XL)                 0.1260     8.1693 r
+  locationor/u_div_yt/U756/Y (OAI21XL)                  0.1632     8.3325 f
+  locationor/u_div_yt/U439/Y (OAI21X1)                  0.2307     8.5632 r
+  locationor/u_div_yt/U758/Y (AOI222XL)                 0.1885     8.7517 f
+  locationor/u_div_yt/U442/Y (NOR2XL)                   0.2440     8.9957 r
+  locationor/u_div_yt/U763/Y (OAI22XL)                  0.1579     9.1536 f
+  locationor/u_div_yt/U764/Y (AOI2BB2X1)                0.2993     9.4529 f
+  locationor/u_div_yt/U767/Y (AOI2BB1X2)                0.2007     9.6536 f
+  locationor/u_div_yt/U768/Y (AOI211X4)                 0.4113    10.0650 r
+  locationor/u_div_yt/U791/Y (CLKMX2X4)                 0.2233    10.2883 r
+  locationor/u_div_yt/U792/Y (AOI222X1)                 0.1585    10.4468 f
+  locationor/u_div_yt/U793/Y (NOR2X1)                   0.1617    10.6085 r
+  locationor/u_div_yt/U795/Y (NOR2XL)                   0.0657    10.6742 f
+  locationor/u_div_yt/U798/Y (OAI21XL)                  0.2574    10.9316 r
+  locationor/u_div_yt/U799/Y (OAI21XL)                  0.1431    11.0747 f
+  locationor/u_div_yt/U800/Y (OAI211XL)                 0.1297    11.2045 r
+  locationor/u_div_yt/U801/Y (OAI21XL)                  0.1502    11.3546 f
+  locationor/u_div_yt/U626/Y (OAI21XL)                  0.4349    11.7895 r
+  locationor/u_div_yt/U803/Y (AOI222X1)                 0.2673    12.0568 f
+  locationor/u_div_yt/U804/Y (NOR2X1)                   0.1723    12.2290 r
+  locationor/u_div_yt/U809/Y (OAI22XL)                  0.1198    12.3488 f
+  locationor/u_div_yt/U810/Y (NOR2X1)                   0.1391    12.4879 r
+  locationor/u_div_yt/U811/Y (OAI21XL)                  0.1027    12.5906 f
+  locationor/u_div_yt/U813/Y (OAI211X1)                 0.1138    12.7044 r
+  locationor/u_div_yt/U178/Y (INVXL)                    0.0659    12.7703 f
+  locationor/u_div_yt/U817/Y (OAI22XL)                  0.2473    13.0175 r
+  locationor/u_div_yt/U1161/Y (BUFX3)                   0.2536    13.2711 r
+  locationor/u_div_yt/U651/Y (MX2X1)                    0.2405    13.5117 f
+  locationor/u_div_yt/U841/Y (OAI21XL)                  0.0927    13.6044 r
+  locationor/u_div_yt/U860/Y (OAI2BB1XL)                0.1145    13.7189 f
+  locationor/u_div_yt/U629/Y (OAI21XL)                  0.1349    13.8538 r
+  locationor/u_div_yt/U345/Y (AOI31XL)                  0.1817    14.0355 f
+  locationor/u_div_yt/U845/Y (OAI21XL)                  0.1528    14.1883 r
+  locationor/u_div_yt/U846/Y (OAI211XL)                 0.1417    14.3301 f
+  locationor/u_div_yt/U847/Y (OAI21X1)                  0.1326    14.4626 r
+  locationor/u_div_yt/U54/Y (OAI21X1)                   0.1620    14.6246 f
+  locationor/u_div_yt/U849/Y (AOI222X1)                 0.3464    14.9710 r
+  locationor/u_div_yt/U29/Y (NOR2XL)                    0.1142    15.0852 f
+  locationor/u_div_yt/U857/Y (AOI2BB1X2)                0.2023    15.2875 f
+  locationor/u_div_yt/U858/Y (AOI211X1)                 0.2329    15.5203 r
+  locationor/u_div_yt/U859/Y (OAI21X1)                  0.1467    15.6670 f
+  locationor/u_div_yt/U34/Y (AOI222XL)                  0.3707    16.0377 r
+  locationor/u_div_yt/U44/Y (NOR2XL)                    0.1063    16.1440 f
+  locationor/u_div_yt/U1226/Y (BUFX3)                   0.2094    16.3534 f
+  locationor/u_div_yt/U528/Y (MX2X1)                    0.2302    16.5836 r
+  locationor/u_div_yt/U_DIV_clk_r_REG27_S3/D (SDFFRX1)
+                                                        0.0000    16.5836 r
+  data arrival time                                               16.5836
+
+  clock clk (rise edge)                                16.0000    16.0000
+  clock network delay (ideal)                           1.0000    17.0000
+  clock uncertainty                                    -0.1000    16.9000
+  locationor/u_div_yt/U_DIV_clk_r_REG27_S3/CK (SDFFRX1)
+                                                        0.0000    16.9000 r
+  library setup time                                   -0.3163    16.5837
+  data required time                                              16.5837
+  --------------------------------------------------------------------------
+  data required time                                              16.5837
+  data arrival time                                              -16.5836
+  --------------------------------------------------------------------------
+  slack (MET)                                                      0.0001
+
+
+1

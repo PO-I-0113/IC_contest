@@ -1,0 +1,81 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay max
+        -max_paths 1
+Design : RFILE
+Version: Q-2019.12
+Date   : Sun Dec 21 21:54:51 2025
+****************************************
+
+Operating Conditions: slow   Library: slow
+Wire Load Model Mode: top
+
+  Startpoint: constant_calculater/square_sensor_C_X_reg_7_
+              (rising edge-triggered flip-flop clocked by clk)
+  Endpoint: locationor/u_div_xt/clk_r_REG82_S1
+            (rising edge-triggered flip-flop clocked by clk)
+  Path Group: clk
+  Path Type: max
+
+  Point                                                   Incr       Path
+  --------------------------------------------------------------------------
+  clock clk (rise edge)                                 0.0000     0.0000
+  clock network delay (ideal)                           1.0000     1.0000
+  constant_calculater/square_sensor_C_X_reg_7_/CK (SDFFRX4)
+                                                        0.0000     1.0000 r
+  constant_calculater/square_sensor_C_X_reg_7_/Q (SDFFRX4)
+                                                        0.4466     1.4466 f
+  constant_calculater/square_sensor_C_X[7] (constant_calculate_test_1)
+                                                        0.0000     1.4466 f
+  locationor/square_sensor_C_X[7] (location_test_1)     0.0000     1.4466 f
+  locationor/U4607/Y (XOR2X4)                           0.1340     1.5806 r
+  locationor/U4606/Y (XOR2X4)                           0.1446     1.7252 r
+  locationor/U4131/Y (NOR2X6)                           0.0853     1.8105 f
+  locationor/U4119/Y (NOR2X6)                           0.0871     1.8976 r
+  locationor/U916/Y (INVX4)                             0.0555     1.9531 f
+  locationor/U2203/Y (NOR2X6)                           0.0703     2.0234 r
+  locationor/U3784/Y (NAND2X4)                          0.0717     2.0951 f
+  locationor/U1681/Y (NAND2X6)                          0.0908     2.1860 r
+  locationor/U3939/Y (XNOR2X4)                          0.1455     2.3315 r
+  locationor/U1759/Y (INVX4)                            0.0564     2.3879 f
+  locationor/U3947/Y (NAND2X2)                          0.0577     2.4456 r
+  locationor/U1777/Y (OAI2BB1X4)                        0.1453     2.5909 r
+  locationor/U2165/Y (XOR2X4)                           0.1673     2.7581 r
+  locationor/U2163/Y (BUFX8)                            0.1573     2.9154 r
+  locationor/U2900/Y (XOR2X2)                           0.1620     3.0774 f
+  locationor/U383/Y (NOR2X2)                            0.1333     3.2107 r
+  locationor/U2793/Y (NOR2X4)                           0.0708     3.2815 f
+  locationor/U2792/Y (NAND2BX4)                         0.1249     3.4064 f
+  locationor/U961/Y (NAND2X4)                           0.0717     3.4781 r
+  locationor/U5230/Y (XNOR2X4)                          0.1503     3.6284 r
+  locationor/U5228/Y (XNOR2X4)                          0.1510     3.7794 r
+  locationor/U2050/Y (XOR2X4)                           0.1414     3.9207 r
+  locationor/U2207/Y (XNOR2X4)                          0.1398     4.0605 r
+  locationor/U3833/Y (XOR2X4)                           0.1933     4.2538 r
+  locationor/U808/Y (NOR2X6)                            0.0724     4.3262 f
+  locationor/U792/Y (OAI21X2)                           0.1597     4.4859 r
+  locationor/U5175/Y (AOI21X4)                          0.0845     4.5704 f
+  locationor/U3235/Y (OAI21X4)                          0.1381     4.7085 r
+  locationor/U2880/Y (OAI2BB1X4)                        0.1599     4.8684 r
+  locationor/U2879/Y (XNOR2X4)                          0.0878     4.9562 r
+  locationor/u_div_xt/a[19] (location_DW_div_pipe_J1_1_test_1)
+                                                        0.0000     4.9562 r
+  locationor/u_div_xt/clk_r_REG82_S1/D (SDFFRHQX8)      0.0000     4.9562 r
+  data arrival time                                                4.9562
+
+  clock clk (rise edge)                                 4.1000     4.1000
+  clock network delay (ideal)                           1.0000     5.1000
+  clock uncertainty                                    -0.1000     5.0000
+  locationor/u_div_xt/clk_r_REG82_S1/CK (SDFFRHQX8)     0.0000     5.0000 r
+  library setup time                                   -0.2061     4.7939
+  data required time                                               4.7939
+  --------------------------------------------------------------------------
+  data required time                                               4.7939
+  data arrival time                                               -4.9562
+  --------------------------------------------------------------------------
+  slack (VIOLATED)                                                -0.1623
+
+
+1
