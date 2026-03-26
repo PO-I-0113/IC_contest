@@ -1,6 +1,6 @@
 
 `timescale 1ns/10ps
-`define CYCLE      13.0  
+`define CYCLE      20.0  
 `define SDFFILE    "../SYN/netlist/REFRACT_syn.sdf"
 `define MAX_CYCLE  100000
 `define SHOW_MISMATCH_MAX 8
