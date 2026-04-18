@@ -23,27 +23,42 @@ Each project involves translating algorithmic specifications into synthesizable 
 ## 📊 Solution Summary
 
 > **Note:** Detailed architecture diagrams and synthesis reports can be found in each year's sub-directory.
+>
+> **狀態判定（依 repo 內 RTL 掃描）：** **已完成**＝主模組內含可綜合之邏輯（狀態機、資料路徑、`always`／assign 等），非僅宣告 port 之空殼；**未完成**＝頂層僅介面、模組本體尚未實作。下列為目前工作區掃描結果。
 
-| Year | Problem Name | Module Name | Category | Description |
+### ✅ 已完成
+
+| Year | Problem Name | Module Name | Category | RTL 路徑（主檔） |
 | :--- | :--- | :--- | :--- | :--- |
-| **2025** | CONVEX | `CONVEX` | Computational Geometry | 凸包演算法硬體實作 |
-| **2024** | Bicubic Interpolation | `Bicubic` | Image Processing | 雙三次插值影像處理硬體實作 |
-| **2024** | HMC | `HMC` | Signal Processing | 硬體加速器設計 |
-| **2021** | Geofence | `geofence` | Location Processing | 地理圍欄演算法硬體實作 |
-| **2020** | String Matching Engine | `SME` | String Processing | 字串匹配引擎硬體實作 |
-| **2020** | SCE | `SCE` | Signal Processing | 信號處理器設計 |
-| **2019** | GPS Data Compression | `GPSDC` | Data Compression | GPS 數據壓縮硬體實作 |
-| **2019** | Image Convolutional | `CONV` | Image Processing | 影像卷積神經網路硬體加速器 |
-| **2019** | IoT Data Filter | `IOTDF` | Data Processing | 物聯網數據過濾器 |
-| **2018** | Huffman Encoder | `huffman` | Data Compression | 霍夫曼編碼器硬體實作 |
-| **2018** | LCD Controller | `LCD_CTRL` | Display Control | LCD 控制器設計 |
-| **2018** | Register File | `RFILE` | Memory Design | 暫存器檔案設計 |
-| **2018** | TPA | `TPA` | Signal Processing | 信號處理加速器設計 |
+| **2026** | Refraction（折射／光路） | `REFRACT` | Computational Optics | `2026/REFRACT/RTL/REFRACT.v` |
+| **2024** | Bicubic Interpolation | `Bicubic` | Image Processing | `2024/bicubic/RTL/Bicubic.v`（含 `ImgROM`／`ResultSRAM`） |
+| **2024** | HMC | `HMC` | Signal Processing | `2024/HMC/icc2024cb/RTL/HMC.sv` |
+| **2020** | String Matching Engine | `SME` | String Processing | `2020/String_matching/RTL/SME.sv` |
+| **2020** | SCE | `SCE` | Signal Processing | `2020/SCE/RTL/SCE.sv` |
+| **2019** | Image Convolutional | `CONV` | Image Processing | `2019/Image_convolutional/RTL/CONV.sv` |
+| **2019** | IoT Data Filter | `IOTDF` | Data Processing | `2019/IOTDF/RTL/IOTDF.v` |
+| **2018** | Huffman Encoder | `huffman` | Data Compression | `2018/huffman/RTL/huffman.v` |
+| **2018** | LCD Controller | `LCD_CTRL` | Display Control | `2018/LCD_CTRL/RTL/LCD_CTRL.sv` |
+| **2018** | RF 定位（RSSI） | `RFILE` | Location Processing | `2018/RF/RTL/RFILE.v`（非暫存器檔） |
+| **2018** | TPA | `TPA` | Signal Processing | `2018/TPA/RTL/TPA.sv` |
+
+### ⏳ 未完成（頂層為空殼／尚無實作）
+
+| Year | Problem Name | Module Name | Category | RTL 路徑（待補） |
+| :--- | :--- | :--- | :--- | :--- |
+| **2025** | CONVEX | `CONVEX` | Computational Geometry | `2025/CONVEX/CONVEX.v`（僅 port，`endmodule` 前無邏輯） |
+| **2021** | Geofence | `geofence` | Location Processing | `2021/geofence/geofence.v`（僅 port） |
+| **2019** | GPS Data Compression | `GPSDC` | Data Compression | `2019/GPSDC/RTL/GPSDC.v`（僅 port；TB／SDC 仍存在） |
 
 ## 📂 Directory Structure
 
 ```text
 .
+├── 2026/
+│   └── REFRACT/              # ICC 2026 — Refraction / optics path
+│       ├── RTL/              # RTL source files (REFRACT.v)
+│       ├── SIM/              # Simulation testbenches
+│       └── SYN/              # Synthesis scripts and reports
 ├── 2025/
 │   └── CONVEX/               # CONVEX Algorithm
 │       ├── CONVEX.v         # RTL source file
@@ -103,7 +118,7 @@ Each project involves translating algorithmic specifications into synthesizable 
 │       ├── Prime_time/       # PrimeTime scripts
 │       └── work/             # Build outputs and logs
 ├── 2018/
-│   ├── hufffman/             # Huffman Encoder
+│   ├── huffman/             # Huffman Encoder
 │   │   └── B_ICC2018_priliminary_grad_cell_based/
 │   │       ├── RTL/          # RTL source files
 │   │       ├── SIM/          # Simulation testbenches
@@ -113,7 +128,7 @@ Each project involves translating algorithmic specifications into synthesizable 
 │   │   ├── SIM/              # Simulation testbenches
 │   │   ├── SYN/              # Synthesis scripts and reports
 │   │   └── work/             # Build outputs and logs
-│   ├── RF/                   # Register File
+│   ├── RF/                   # RF localization (RSSI), not register file
 │   │   └── B_ICC2018_grad_cell-based/
 │   │       ├── RTL/          # RTL source files (RFILE.v)
 │   │       ├── SIM/          # Simulation testbenches
@@ -131,10 +146,19 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 ## 📝 Project Details
 
+### 2026 Projects
+
+#### Refraction (`REFRACT/`)
+- **Module:** `REFRACT.v`
+- **RTL 狀態：** ✅ 主模組含完整資料路徑與控制邏輯
+- **Description:** 折射／光路相關運算硬體實作（依競賽題目規格）
+- **Key Features:** SRAM 介面、狀態控制、折射幾何／數值運算資料路徑
+
 ### 2025 Projects
 
 #### CONVEX (`CONVEX/`)
 - **Module:** `CONVEX.v`
+- **RTL 狀態：** ⏳ 頂層僅 port 宣告，尚無實作（見檔案本體）
 - **Description:** 凸包演算法硬體實作，用於計算幾何問題
 - **Key Features:** 凸包計算、座標處理、硬體加速
 
@@ -154,6 +178,7 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 #### Geofence (`geofence/`)
 - **Module:** `geofence.v`
+- **RTL 狀態：** ⏳ 頂層僅 port 宣告，尚無實作
 - **Description:** 地理圍欄演算法硬體實作，用於位置判斷
 - **Key Features:** 座標計算、區域判斷、硬體加速
 
@@ -173,6 +198,7 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 #### GPS Data Compression (`GPSDC/`)
 - **Module:** `GPSDC.v`
+- **RTL 狀態：** ⏳ 頂層僅 port 宣告，尚無實作（`SIM`／`SYN` 腳本仍存在）
 - **Description:** GPS 數據壓縮硬體實作
 - **Key Features:** 數據壓縮、GPS 座標處理
 
@@ -197,7 +223,7 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 ### 2018 Projects
 
-#### Huffman Encoder (`hufffman/`)
+#### Huffman Encoder (`huffman/`)
 - **Module:** `huffman.v`
 - **Description:** 霍夫曼編碼器硬體實作，用於數據壓縮
 - **Key Features:** 動態編碼表生成、位元流輸出
@@ -207,10 +233,10 @@ Each project involves translating algorithmic specifications into synthesizable 
 - **Description:** LCD 控制器設計，用於顯示控制
 - **Key Features:** 顯示控制、時序管理、介面設計
 
-#### Register File (`RF/`)
+#### RF 定位 — RSSI（`RF/`，模組 `RFILE`）
 - **Module:** `RFILE.v`
-- **Description:** 高效能暫存器檔案設計
-- **Key Features:** 流水線設計、多端口讀寫
+- **Description:** 三錨點座標與 RSSI 推算目標位置（Wi‑Fi／定位類題型）；**非**一般意義之 Register File
+- **Key Features:** RSSI 路徑、距離／加權運算、線性方程組求解、輸出目標座標 `(xt, yt)`
 
 #### TPA (`TPA/`)
 - **Module:** TPA Signal Processor
