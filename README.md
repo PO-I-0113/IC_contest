@@ -24,7 +24,6 @@ Each project involves translating algorithmic specifications into synthesizable 
 
 > **Note:** Detailed architecture diagrams and synthesis reports can be found in each year's sub-directory.
 >
-> **狀態判定（依 repo 內 RTL 掃描）：** **已完成**＝主模組內含可綜合之邏輯（狀態機、資料路徑、`always`／assign 等），非僅宣告 port 之空殼；**未完成**＝頂層僅介面、模組本體尚未實作。下列為目前工作區掃描結果。
 
 ### ✅ 已完成
 
