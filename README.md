@@ -49,6 +49,48 @@ Each project involves translating algorithmic specifications into synthesizable 
 | **2021** | Geofence | `geofence` | Location Processing | `2021/geofence/geofence.v`（僅 port） |
 | **2019** | GPS Data Compression | `GPSDC` | Data Compression | `2019/GPSDC/RTL/GPSDC.v`（僅 port；TB／SDC 仍存在） |
 
+## 🚀 快速開始
+
+### 新手上路
+
+如果你是第一次使用本 Repository，建議按以下步驟：
+
+**1. 選擇專案**
+```bash
+cd 2024/bicubic  # 以 Bicubic 專案為例
+```
+
+**2. 建立工作目錄**
+```bash
+mkdir -p work
+cp ../../Makefile work/
+cd work
+```
+
+**3. 執行模擬驗證**
+```bash
+make start              # 初始化專案結構
+make sim_rtl SIM=xrun   # RTL 功能驗證
+```
+
+**4. 查看結果**
+- 模擬波形：在 SIM 目錄下查看 `.fsdb` 或 `.vcd` 檔案
+- 日誌輸出：檢查終端輸出或 `work/` 下的 log 檔案
+
+### 環境需求
+
+- **必要工具：** xrun / ncverilog / VCS（任一模擬器）
+- **選配工具：** Design Compiler、PrimeTime、TetraMAX（用於合成與驗證）
+- **作業系統：** Linux（建議 CentOS 7+ 或 Ubuntu 18.04+）
+
+### 常見專案推薦
+
+| 難度 | 推薦專案 | 特色 |
+| :--- | :--- | :--- |
+| ⭐ 入門 | `2018/LCD_CTRL` | 顯示控制器，邏輯清晰 |
+| ⭐⭐ 中階 | `2024/bicubic` | 影像處理，含固定點運算 |
+| ⭐⭐⭐ 進階 | `2026/REFRACT` | 光學計算，複雜資料路徑 |
+
 ## 📂 Directory Structure
 
 ```text
