@@ -8,15 +8,15 @@
 cd ../..
 source common/scripts/setup.tcl
 
-file mkdir apr/def
-file mkdir apr/gds
-file mkdir apr/report
+file mkdir [file dirname $APR_DEF]
+file mkdir [file dirname $APR_GDS]
+file mkdir $APR_REPORT
 file mkdir apr/lef
 file mkdir apr/lib
 
 if {![file exists $SYN_NETLIST]} {
     puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn"
+    puts "ERROR: 請先執行 make syn CLK=$CLK"
     exit 1
 }
 

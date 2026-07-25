@@ -15,9 +15,12 @@ source common/scripts/load_tech.tcl
 file mkdir lec/report
 file mkdir lec/session
 
+file mkdir $LEC_REPORT
+file mkdir [file dirname $LEC_SESSION]
+
 if {![file exists $SYN_NETLIST]} {
     puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn TECH=$TECH"
+    puts "ERROR: 請先執行 make syn TECH=$TECH CLK=$CLK"
     exit 1
 }
 

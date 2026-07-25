@@ -24,12 +24,15 @@ spyglass/report/*
 *.sgdc
 *.awl
 
-# Synthesis
-syn/netlist/*
+# Synthesis（含 clk_* 子目錄與 DFT report）
+syn/netlist/**
 !syn/netlist/.gitkeep
-syn/report/*
+syn/report/**
 !syn/report/.gitkeep
+syn/dft_report/**
+!syn/dft_report/.gitkeep
 *_syn.ddc
+*_syn_dft.ddc
 alib-52/
 command.log
 default.svf

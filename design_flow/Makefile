@@ -1,67 +1,64 @@
 # ============================================================
 # IC Design Flow Makefile (方案 A)
-# 流程: SIM → COV → SpyGlass → SYN → LEC → TMAX → PT → APR(Innovus)
-# 路徑規則: 全部相對 design_flow/
-# 製程切換: make syn TECH=U18
+# 製程: TECH=U18|TSMC13|ADFP|TN16|TN7
+# Clock 分層: CLK=10 → syn/netlist|report|dft_report/clk_10/
 # ============================================================
 
-# ---------- 使用者設定 ----------
 TOP      ?= DESIGN_TOP
-TECH     ?= U18          # U18 | TSMC13 | ADFP | TN16 | TN7
+TECH     ?= U18
+CLK      ?= 10           # → clk_$(CLK) 子目錄
 RTL_FILE ?= rtl/src/$(TOP).v
 TB_FILE  ?= sim/tb/tb_$(TOP).sv
 FILELIST ?= rtl/filelist.f
 
-SIM      ?= vcs          # vcs | xrun
+SIM      ?= vcs
 WORK     ?= work
 
-# 傳入 EDA shell 的 TCL 變數
-TCL_SET  = set TOP $(TOP); set TECH $(TECH)
+TCL_SET  = set TOP $(TOP); set TECH $(TECH); set CLK $(CLK)
 
 GREEN := \033[0;32m
 RED   := \033[0;31m
 NC    := \033[0m
 
-.PHONY: help start check_tech sim cov spyglass syn lec tmax pt apr clean clean_all
+.PHONY: help start check_tech sim cov spyglass syn syn_dft lec tmax pt apr clean clean_all
 
 help:
 	@echo ""
-	@echo "IC Design Flow targets (cwd = design_flow/):"
-	@echo "  make start       - 建立 work 目錄"
-	@echo "  make sim         - RTL 功能模擬"
-	@echo "  make cov         - Code Coverage"
-	@echo "  make spyglass    - SpyGlass Lint + CDC"
-	@echo "  make syn         - Design Compiler (compile_ultra)"
-	@echo "  make lec         - Formality LEC"
-	@echo "  make tmax        - TetraMAX ATPG"
-	@echo "  make pt          - PrimeTime STA"
-	@echo "  make apr         - Innovus APR"
-	@echo "  make clean       - 清理 work / log"
+	@echo "IC Design Flow (cwd = design_flow/)"
+	@echo "  make syn          - 合成（無 scan）"
+	@echo "  make syn_dft      - 合成 + scan chain（DFT）"
+	@echo "  make lec / pt / tmax / apr / spyglass / sim / cov"
 	@echo ""
-	@echo "製程切換 (TECH → lib/<TECH>/setup_*.tcl):"
+	@echo "製程 TECH: U18 | TSMC13 | ADFP | TN16 | TN7"
 	@echo "  make syn TECH=U18"
-	@echo "  make syn TECH=TSMC13"
-	@echo "  make syn TECH=ADFP"
-	@echo "  make syn TECH=TN16"
-	@echo "  make syn TECH=TN7"
-	@echo "  make pt  TECH=U18     # 請與 syn 使用相同 TECH"
 	@echo ""
-	@echo "預設: TOP=$(TOP)  TECH=$(TECH)"
-	@echo "路徑: 請維持相對路徑，勿改成絕對路徑"
+	@echo "Clock 分層 CLK → syn/{netlist,report,dft_report}/clk_<CLK>/"
+	@echo "  make syn     CLK=10"
+	@echo "  make syn     CLK=6"
+	@echo "  make syn_dft CLK=10 TECH=U18"
+	@echo "  make pt      CLK=10 TECH=U18"
+	@echo ""
+	@echo "SDC 優先: syn/constraint/\$$(TOP)_clk\$$(CLK).sdc"
+	@echo "         否則 syn/constraint/\$$(TOP).sdc"
+	@echo ""
+	@echo "預設: TOP=$(TOP)  TECH=$(TECH)  CLK=$(CLK)"
 	@echo ""
 
 start:
 	@mkdir -p $(WORK)/sim
-	@mkdir -p syn/report lec/report tmax/report primetime/report apr/report spyglass/report cov/report
-	@echo "$(GREEN)[INFO]$(NC) work/ and report dirs ready"
+	@mkdir -p syn/netlist/clk_$(CLK) syn/report/clk_$(CLK) syn/dft_report/clk_$(CLK)
+	@mkdir -p lec/report/clk_$(CLK) lec/session/clk_$(CLK)
+	@mkdir -p tmax/report/clk_$(CLK) tmax/pattern/clk_$(CLK)
+	@mkdir -p primetime/report/clk_$(CLK) apr/report/clk_$(CLK)
+	@echo "$(GREEN)[INFO]$(NC) dirs ready for clk_$(CLK)"
 
 check_tech:
 	@if [ ! -d "lib/$(TECH)" ]; then \
 		echo "$(RED)[ERROR]$(NC) 找不到製程目錄: lib/$(TECH)"; \
-		echo "        可用: U18 TSMC13 ADFP TN16 TN7 或自建 lib/<name>/"; \
+		echo "        可用: U18 TSMC13 ADFP TN16 TN7"; \
 		exit 1; \
 	fi
-	@echo "$(GREEN)[INFO]$(NC) TECH=$(TECH)  dir=lib/$(TECH)"
+	@echo "$(GREEN)[INFO]$(NC) TECH=$(TECH)  CLK=$(CLK)  tag=clk_$(CLK)"
 
 sim: start
 ifeq ($(SIM),vcs)
@@ -79,34 +76,46 @@ cov: start
 spyglass: start
 	cd spyglass/script && sg_shell -x '$(TCL_SET)' -tcl run_spyglass.tcl
 
+# ---------- 一般合成 ----------
 syn: start check_tech
 	@if [ ! -f "lib/$(TECH)/setup_dc.tcl" ]; then \
 		echo "$(RED)[ERROR]$(NC) 缺少 lib/$(TECH)/setup_dc.tcl"; exit 1; \
 	fi
-	cd syn/script && dc_shell -x '$(TCL_SET)' -f run_syn.tcl | tee ../report/syn.log
+	cd syn/script && dc_shell -x '$(TCL_SET)' -f run_syn.tcl \
+		| tee ../report/clk_$(CLK)/syn.log
+
+# ---------- 合成 + Scan Chain ----------
+syn_dft: start check_tech
+	@if [ ! -f "lib/$(TECH)/setup_dc.tcl" ]; then \
+		echo "$(RED)[ERROR]$(NC) 缺少 lib/$(TECH)/setup_dc.tcl"; exit 1; \
+	fi
+	cd syn/script && dc_shell -x '$(TCL_SET)' -f run_syn_dft.tcl \
+		| tee ../dft_report/clk_$(CLK)/syn_dft.log
 
 lec: start check_tech
-	cd lec/script && fm_shell -x '$(TCL_SET)' -f run_lec.tcl | tee ../report/lec.log
+	cd lec/script && fm_shell -x '$(TCL_SET)' -f run_lec.tcl \
+		| tee ../report/clk_$(CLK)/lec.log
 
 tmax: start
-	cd tmax/script && tmax -shell run_tmax.tcl | tee ../report/tmax.log
+	cd tmax/script && TOP=$(TOP) TECH=$(TECH) CLK=$(CLK) tmax -shell run_tmax.tcl \
+		| tee ../report/clk_$(CLK)/tmax.log
 
 pt: start check_tech
 	@if [ ! -f "lib/$(TECH)/setup_pt.tcl" ]; then \
 		echo "$(RED)[ERROR]$(NC) 缺少 lib/$(TECH)/setup_pt.tcl"; exit 1; \
 	fi
-	cd primetime/script && pt_shell -x '$(TCL_SET)' -f run_pt.tcl | tee ../report/pt.log
+	cd primetime/script && pt_shell -x '$(TCL_SET)' -f run_pt.tcl \
+		| tee ../report/clk_$(CLK)/pt.log
 
 apr: start
-	cd apr/script && TOP=$(TOP) bash run_apr.sh
+	cd apr/script && TOP=$(TOP) CLK=$(CLK) bash run_apr.sh
 
 clean:
 	rm -rf $(WORK)
-	rm -f syn/report/*.log lec/report/*.log tmax/report/*.log \
-	      primetime/report/*.log apr/report/*.log
 
 clean_all: clean
-	@find syn/netlist syn/report lec/report lec/session \
+	@find syn/netlist syn/report syn/dft_report \
+	      lec/report lec/session \
 	      tmax/report tmax/pattern primetime/report primetime/spef \
 	      apr/def apr/gds apr/report cov/report spyglass/report \
 	      -type f ! -name '.gitkeep' -delete 2>/dev/null || true

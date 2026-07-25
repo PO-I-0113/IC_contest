@@ -11,13 +11,13 @@ source common/scripts/setup.tcl
 set TECH_TOOL "pt"
 source common/scripts/load_tech.tcl
 
-file mkdir primetime/report
+file mkdir $PT_REPORT
 file mkdir primetime/constraint
-file mkdir primetime/spef
+file mkdir [file dirname $PT_SPEF]
 
 if {![file exists $SYN_NETLIST]} {
     puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn TECH=$TECH"
+    puts "ERROR: 請先執行 make syn TECH=$TECH CLK=$CLK"
     exit 1
 }
 

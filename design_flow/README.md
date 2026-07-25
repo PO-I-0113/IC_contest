@@ -28,10 +28,11 @@ design_flow/
 │   ├── waiver/
 │   └── report/
 ├── syn/                 # Design Compiler 合成
-│   ├── script/
-│   ├── constraint/      # SDC
-│   ├── netlist/         # 合成後網表
-│   └── report/
+│   ├── script/          # run_syn.tcl / run_syn_dft.tcl
+│   ├── constraint/      # SDC（可 ${TOP}_clk<CLK>.sdc）
+│   ├── netlist/clk_*/   # 依時脈週期分層的網表
+│   ├── report/clk_*/    # 一般合成報告
+│   └── dft_report/clk_*/# DFT / scan 專用報告
 ├── lec/                 # Formality LEC（邏輯等價檢查）
 │   ├── script/
 │   ├── session/
