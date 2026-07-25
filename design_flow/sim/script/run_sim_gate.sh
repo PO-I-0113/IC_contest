@@ -1,85 +1,55 @@
 #!/usr/bin/env bash
 # ============================================================
-# Gate-level 模擬（相對 design_flow/ 路徑）
-# 執行：make sim_gate CLK=10 SCAN=0
-#       make sim_gate CLK=10 SCAN=1
-# GATE_NET 可覆寫：auto|syn|dft（預設依 SCAN）
+# Gate-level 模擬
+#   make sim_gate      → NET_TAG=syn
+#   make sim_gate_dft  → NET_TAG=dft
 # ============================================================
 set -euo pipefail
 
-# 切回 design_flow/
 cd "$(dirname "$0")/../.."
 
 TOP="${TOP:-DESIGN_TOP}"
 TECH="${TECH:-U18}"
 CLK="${CLK:-10}"
-SCAN="${SCAN:-0}"
+NET_TAG="${NET_TAG:-syn}"
 SIM="${SIM:-vcs}"
-GATE_NET="${GATE_NET:-}"       # 空 = 跟 SCAN；也可 syn|dft|auto
-TIMING="${TIMING:-1}"          # 1=做 timing check；0=+notimingcheck
+TIMING="${TIMING:-1}"
+
+if [[ "${NET_TAG}" != "dft" ]]; then NET_TAG="syn"; fi
 
 CLK_TAG="clk_${CLK}"
 NET_DIR="syn/netlist/${CLK_TAG}"
 RPT_DIR="syn/report/${CLK_TAG}"
+SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
+WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
 TB_FILE="${TB_FILE:-sim/tb/tb_${TOP}.sv}"
 TECH_VERILOG="${TECH_VERILOG:-lib/${TECH}/stdcell/typical.v}"
 
-NET_SYN="${NET_DIR}/${TOP}_syn.v"
-NET_DFT="${NET_DIR}/${TOP}_syn_dft.v"
-SDF_SYN="${RPT_DIR}/${TOP}_syn.sdf"
-SDF_DFT="${RPT_DIR}/${TOP}_syn_dft.sdf"
+mkdir -p "${SIM_RPT}" "${WORK_DIR}"
 
-# SCAN → 預設選網表；GATE_NET 可覆寫
-if [[ -z "${GATE_NET}" ]]; then
-  if [[ "${SCAN}" == "1" ]]; then GATE_NET="dft"; else GATE_NET="syn"; fi
+if [[ "${NET_TAG}" == "dft" ]]; then
+  NETLIST="${NET_DIR}/${TOP}_syn_dft.v"
+  SDF_FILE="${RPT_DIR}/${TOP}_syn_dft.sdf"
+else
+  NETLIST="${NET_DIR}/${TOP}_syn.v"
+  SDF_FILE="${RPT_DIR}/${TOP}_syn.sdf"
 fi
 
-NET_TAG="syn"
-SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
-WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
-mkdir -p "${SIM_RPT}" "${WORK_DIR}"
-
-pick_net() {
-  case "${GATE_NET}" in
-    syn)
-      NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"; NET_TAG="syn" ;;
-    dft)
-      NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft" ;;
-    auto)
-      # 預設不用 scan：優先 syn；沒有 syn 才退回 dft
-      if [[ -f "${NET_SYN}" ]]; then
-        NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"; NET_TAG="syn"
-        echo "[sim_gate] GATE_NET=auto → syn netlist（預設不用 scan）"
-      elif [[ -f "${NET_DFT}" ]]; then
-        NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft"
-        echo "[sim_gate] GATE_NET=auto → 無 syn，改用 DFT netlist"
-      else
-        echo "[ERROR] 找不到 syn/dft netlist"; exit 1
-      fi
-      ;;
-    *)
-      echo "[ERROR] GATE_NET 僅支援 auto|syn|dft"; exit 1 ;;
-  esac
-}
-
-pick_net
-SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
-WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
-mkdir -p "${SIM_RPT}" "${WORK_DIR}"
-
-echo "[sim_gate] TOP=${TOP} TECH=${TECH} CLK=${CLK} SCAN=${SCAN} GATE_NET=${GATE_NET}"
+echo "[sim_gate] TOP=${TOP} TECH=${TECH} CLK=${CLK} NET_TAG=${NET_TAG}"
 echo "[sim_gate] NETLIST=${NETLIST}"
 echo "[sim_gate] SDF=${SDF_FILE}"
-echo "[sim_gate] TECH_VERILOG=${TECH_VERILOG}"
 
 if [[ ! -f "${NETLIST}" ]]; then
   echo "[ERROR] 找不到 gate netlist: ${NETLIST}"
-  echo "        請先: make syn CLK=${CLK} 或 make syn_dft CLK=${CLK}"
+  if [[ "${NET_TAG}" == "dft" ]]; then
+    echo "        請先: make syn_dft CLK=${CLK}"
+  else
+    echo "        請先: make syn CLK=${CLK}"
+  fi
   exit 1
 fi
 if [[ ! -f "${TECH_VERILOG}" ]]; then
   echo "[ERROR] 找不到製程 verilog model: ${TECH_VERILOG}"
-  echo "        請放到 lib/${TECH}/stdcell/ 或指定 TECH_VERILOG=..."
   exit 1
 fi
 if [[ ! -f "${TB_FILE}" ]]; then
@@ -87,24 +57,20 @@ if [[ ! -f "${TB_FILE}" ]]; then
   exit 1
 fi
 
-# SDF 可選：沒有仍可跑功能 gate sim（建議有）
 SDF_DEFINE="+define+SDF"
 if [[ -f "${SDF_FILE}" ]]; then
-  # 傳給 TB 的字串巨集（相對 design_flow/）
   SDF_DEFINE+="+define+SDF_FILE=\"${SDF_FILE}\""
   echo "[sim_gate] 啟用 SDF annotate"
 else
   echo "[WARN] 找不到 SDF: ${SDF_FILE}，改跑無 SDF gate sim"
-  SDF_DEFINE="+define+SDF"
 fi
 
 TIMING_FLAG=""
 if [[ "${TIMING}" == "0" ]]; then
   TIMING_FLAG="+notimingcheck"
-  echo "[sim_gate] TIMING=0 → +notimingcheck"
 fi
 
-LOG="${SIM_RPT}/sim_gate_${GATE_NET}.log"
+LOG="${SIM_RPT}/sim_gate.log"
 
 run_vcs() {
   local out="${WORK_DIR}/simv_gate"
@@ -140,7 +106,7 @@ case "${SIM}" in
   vcs) run_vcs ;;
   xrun) run_xrun ;;
   ncverilog) run_nc ;;
-  *) echo "[ERROR] 不支援 SIM=${SIM}（vcs|xrun|ncverilog）"; exit 1 ;;
+  *) echo "[ERROR] 不支援 SIM=${SIM}"; exit 1 ;;
 esac
 
 echo "[sim_gate] log → ${LOG}"

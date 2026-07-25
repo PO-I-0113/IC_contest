@@ -1,7 +1,7 @@
 # ============================================================
-# TetraMAX ATPG
-# SCAN=1（建議）→ *_syn_dft.v ；SCAN=0 → *_syn.v
-# 執行：make tmax CLK=10 SCAN=1
+# TetraMAX ATPG（單一路徑本）
+#   make tmax      → NET_TAG=syn（通常不建議）
+#   make tmax_dft  → NET_TAG=dft（建議）
 # ============================================================
 
 cd ../..
@@ -12,20 +12,16 @@ file mkdir [file dirname $TMAX_PATTERN]
 
 if {![file exists $ACTIVE_NETLIST]} {
     puts "ERROR: 找不到網表: $ACTIVE_NETLIST"
-    puts "ERROR: ATPG 請用 SCAN=1 並先 make syn_dft CLK=$CLK"
+    puts "ERROR: 請先 make syn_dft CLK=$CLK 再 make tmax_dft"
     exit 1
 }
 
-if {$SCAN == 0} {
-    puts "WARN: 目前 SCAN=0（預設不用 scan）。ATPG 通常需要 scan chain："
-    puts "WARN:   make syn_dft CLK=$CLK && make tmax SCAN=1 CLK=$CLK"
+if {$NET_TAG eq "syn"} {
+    puts "WARN: 目前為 syn 網表。ATPG 建議："
+    puts "WARN:   make syn_dft CLK=$CLK && make tmax_dft CLK=$CLK"
 }
 
-puts "INFO: ATPG 使用網表 SCAN=$SCAN → $ACTIVE_NETLIST"
-
-# if {[file exists $SYN_SPF_DFT] && $SCAN == 1} {
-#   run_drc $SYN_SPF_DFT
-# }
+puts "INFO: ATPG NET_TAG=$NET_TAG → $ACTIVE_NETLIST"
 
 read_netlist $ACTIVE_NETLIST
 run_build_model $TOP
@@ -40,7 +36,6 @@ report_faults -summary         > $TMAX_REPORT/fault_summary.rpt
 report_faults -level 4 100     > $TMAX_REPORT/fault_detail.rpt
 write_patterns $TMAX_PATTERN -format verilog_single_file -replace
 
-puts "INFO: TetraMAX done. SCAN=$SCAN"
+puts "INFO: TetraMAX done. NET_TAG=$NET_TAG"
 puts "INFO: pattern = $TMAX_PATTERN"
-puts "INFO: report  = $TMAX_REPORT"
 exit

@@ -1,9 +1,10 @@
 # ============================================================
 # 共用路徑設定（嚴格相對路徑）
 # ------------------------------------------------------------
-# TECH : 製程（U18 / TSMC13 / ADFP / TN16 / TN7）
-# CLK  : 時脈週期分層 → clk_<CLK>/
-# SCAN : 預設 0 = 不用 scan（*_syn.v）；1 = DFT（*_syn_dft.v）
+# TECH    : 製程（U18 / TSMC13 / ADFP / TN16 / TN7）
+# CLK     : 時脈週期分層 → clk_<CLK>/
+# NET_TAG : syn（預設，*_syn.v）| dft（*_syn_dft.v）
+#           由 Makefile 的 pt / pt_dft 等目標傳入，使用者不必設
 # ============================================================
 
 if {![info exists TOP]} {
@@ -16,15 +17,15 @@ if {![info exists CLK]} {
     if {[info exists ::env(CLK)]} { set CLK $::env(CLK) } else { set CLK "10" }
 }
 # 預設不用 scan
-if {![info exists SCAN]} {
-    if {[info exists ::env(SCAN)]} { set SCAN $::env(SCAN) } else { set SCAN 0 }
+if {![info exists NET_TAG]} {
+    if {[info exists ::env(NET_TAG)]} { set NET_TAG $::env(NET_TAG) } else { set NET_TAG "syn" }
 }
 
-# 正規化 SCAN
-if {$SCAN == 1 || $SCAN eq "1" || $SCAN eq "dft" || $SCAN eq "DFT"} {
-    set SCAN 1
+# 正規化 NET_TAG
+if {$NET_TAG eq "dft" || $NET_TAG eq "DFT" || $NET_TAG eq "1"} {
+    set NET_TAG "dft"
 } else {
-    set SCAN 0
+    set NET_TAG "syn"
 }
 
 # ---------- RTL / SIM ----------
@@ -64,16 +65,14 @@ set SYN_SPF_DFT     "${SYN_NET_DIR}/${TOP}_syn_dft.spf"
 set SYN_SDF         "${SYN_REPORT}/${TOP}_syn.sdf"
 set SYN_SDF_DFT     "${SYN_REPORT}/${TOP}_syn_dft.sdf"
 
-# ---------- SCAN 選擇作用中網表 / SDC / SDF / 報告子目錄 ----------
-if {$SCAN == 1} {
-    set NET_TAG          "dft"
+# ---------- 依 NET_TAG 選擇作用中網表 ----------
+if {$NET_TAG eq "dft"} {
     set ACTIVE_NETLIST   $SYN_NETLIST_DFT
     set ACTIVE_SDC_OUT   $SYN_SDC_OUT_DFT
     set ACTIVE_DDC       $SYN_DDC_DFT
     set ACTIVE_SDF       $SYN_SDF_DFT
     set ACTIVE_SVF       "${SYN_REPORT}/${TOP}_dft.svf"
 } else {
-    set NET_TAG          "syn"
     set ACTIVE_NETLIST   $SYN_NETLIST
     set ACTIVE_SDC_OUT   $SYN_SDC_OUT
     set ACTIVE_DDC       $SYN_DDC
@@ -81,22 +80,22 @@ if {$SCAN == 1} {
     set ACTIVE_SVF       "${SYN_REPORT}/${TOP}.svf"
 }
 
-# 後段報告依 clk_* / syn|dft 分層，避免互相覆蓋
-set LEC_REPORT  "lec/report/${CLK_TAG}/${NET_TAG}"
-set LEC_SESSION "lec/session/${CLK_TAG}/${NET_TAG}/${TOP}_lec.fss"
+# 後段報告：clk_*/syn|dft/
+set LEC_REPORT   "lec/report/${CLK_TAG}/${NET_TAG}"
+set LEC_SESSION  "lec/session/${CLK_TAG}/${NET_TAG}/${TOP}_lec.fss"
 set TMAX_REPORT  "tmax/report/${CLK_TAG}/${NET_TAG}"
 set TMAX_PATTERN "tmax/pattern/${CLK_TAG}/${NET_TAG}/${TOP}_atpg.v"
-set PT_REPORT   "primetime/report/${CLK_TAG}/${NET_TAG}"
-set PT_SPEF     "primetime/spef/${CLK_TAG}/${NET_TAG}/${TOP}.spef"
-set PT_SDC      "primetime/constraint/${TOP}.sdc"
-set APR_DEF     "apr/def/${CLK_TAG}/${NET_TAG}/${TOP}.def"
-set APR_GDS     "apr/gds/${CLK_TAG}/${NET_TAG}/${TOP}.gds"
-set APR_REPORT  "apr/report/${CLK_TAG}/${NET_TAG}"
-set APR_SCRIPT  "apr/script"
-set APR_LIB     "apr/lib"
-set APR_LEF     "apr/lef"
+set PT_REPORT    "primetime/report/${CLK_TAG}/${NET_TAG}"
+set PT_SPEF      "primetime/spef/${CLK_TAG}/${NET_TAG}/${TOP}.spef"
+set PT_SDC       "primetime/constraint/${TOP}.sdc"
+set APR_DEF      "apr/def/${CLK_TAG}/${NET_TAG}/${TOP}.def"
+set APR_GDS      "apr/gds/${CLK_TAG}/${NET_TAG}/${TOP}.gds"
+set APR_REPORT   "apr/report/${CLK_TAG}/${NET_TAG}"
+set APR_SCRIPT   "apr/script"
+set APR_LIB      "apr/lib"
+set APR_LEF      "apr/lef"
 
-# DFT 常見 test port 名稱（LEC 設 constant 用；可在 -x 覆寫）
+# DFT port 名稱（LEC/PT 用）
 if {![info exists SCAN_EN_PORTS]} {
     set SCAN_EN_PORTS {scan_en SE se test_se}
 }
@@ -104,12 +103,10 @@ if {![info exists TEST_MODE_PORTS]} {
     set TEST_MODE_PORTS {test_mode tm TEST_MODE}
 }
 
-# ---------- 製程目錄 ----------
-set TECH_DIR     "lib/${TECH}"
-set LIB_MEMORY   "lib/memory"
-set LIB_TECH     "lib/tech"
+set TECH_DIR   "lib/${TECH}"
+set LIB_MEMORY "lib/memory"
+set LIB_TECH   "lib/tech"
 
-puts "INFO: \[setup.tcl\] TOP=$TOP TECH=$TECH CLK=$CLK SCAN=$SCAN NET_TAG=$NET_TAG"
+puts "INFO: \[setup.tcl\] TOP=$TOP TECH=$TECH CLK=$CLK NET_TAG=$NET_TAG"
 puts "INFO: \[setup.tcl\] ACTIVE_NETLIST=$ACTIVE_NETLIST"
 puts "INFO: \[setup.tcl\] ACTIVE_SDC_OUT=$ACTIVE_SDC_OUT"
-puts "INFO: \[setup.tcl\] ACTIVE_SDF=$ACTIVE_SDF"

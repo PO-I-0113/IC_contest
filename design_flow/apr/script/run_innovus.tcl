@@ -16,11 +16,11 @@ file mkdir apr/lib
 
 if {![file exists $ACTIVE_NETLIST]} {
     puts "ERROR: 找不到網表: $ACTIVE_NETLIST"
-    puts "ERROR: SCAN=$SCAN，請先 make syn 或 make syn_dft CLK=$CLK"
+    puts "ERROR: NET_TAG=$NET_TAG，請先 make syn 或 make syn_dft CLK=$CLK"
     exit 1
 }
 
-puts "INFO: APR 使用網表 SCAN=$SCAN → $ACTIVE_NETLIST"
+puts "INFO: APR NET_TAG=$NET_TAG → $ACTIVE_NETLIST"
 
 # ---------- 設計 / Library（相對路徑；請自行放入 lef/lib）----------
 set init_design_netlisttype Verilog

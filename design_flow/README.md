@@ -119,37 +119,37 @@ make pt  TECH=U18      # 請與 syn 使用同一 TECH
 
 詳見 [`lib/README.md`](lib/README.md)。
 
-### Clock 分層（CLK）+ Scan 分層（SCAN）
+### Clock 分層（CLK）+ 指令區分 syn / dft
 
-**預設 `SCAN=0`（不用 scan）**，一般指令可省略 `SCAN`：
+用**不同 make 目標**選網表（不必設 SCAN）：
 
 ```bash
-make syn      CLK=10
-make lec      CLK=10
-make pt       CLK=10
+# 無 scan（預設）
+make syn CLK=10
+make lec CLK=10
+make pt  CLK=10
 make sim_gate CLK=10
+
+# 有 scan（指令加 _dft）
+make syn_dft CLK=10
+make lec_dft CLK=10
+make pt_dft  CLK=10
+make sim_gate_dft CLK=10
+make tmax_dft CLK=10
 ```
 
-需要 DFT 時再打開 `SCAN=1`：
+| 指令 | 網表 |
+| :--- | :--- |
+| `pt` / `lec` / `sim_gate` … | `*_syn.v` |
+| `pt_dft` / `lec_dft` / … | `*_syn_dft.v` |
 
-```bash
-make syn_dft  CLK=10
-make lec      CLK=10 SCAN=1
-make pt       CLK=10 SCAN=1
-make sim_gate CLK=10 SCAN=1
-make tmax     CLK=10 SCAN=1
-```
-
-| 變數 | 預設 | 意義 |
-| :--- | :--- | :--- |
-| `CLK` | `10` | 目錄 `clk_10/` |
-| `SCAN` | `0` | `0`→`*_syn.v`；`1`→`*_syn_dft.v` |
+內部只傳 `NET_TAG=syn|dft` 給同一支 TCL，**不會複製兩份腳本**。
 
 ### 串接關係
 
 ```text
-預設： make syn     → *_syn.v     → lec/pt/sim_gate/apr（SCAN=0）
-可選： make syn_dft → *_syn_dft.v → 後段加 SCAN=1
+make syn      → *_syn.v      → make lec / pt / sim_gate / apr
+make syn_dft  → *_syn_dft.v  → make lec_dft / pt_dft / sim_gate_dft / tmax_dft / apr_dft
 ```
 
 ---
@@ -196,17 +196,18 @@ cd design_flow
 make help
 make spyglass
 
-# 預設路徑（不用 scan，可省略 SCAN）
+# 預設（無 scan）
 make syn      TECH=U18 CLK=10
 make lec      TECH=U18 CLK=10
 make pt       TECH=U18 CLK=10
 make sim_gate TECH=U18 CLK=10
 
-# 可選：DFT/scan（要顯式 SCAN=1）
-make syn_dft  TECH=U18 CLK=10
-make lec      TECH=U18 CLK=10 SCAN=1
-make pt       TECH=U18 CLK=10 SCAN=1
-make tmax     TECH=U18 CLK=10 SCAN=1
+# DFT（指令加 _dft）
+make syn_dft      TECH=U18 CLK=10
+make lec_dft      TECH=U18 CLK=10
+make pt_dft       TECH=U18 CLK=10
+make sim_gate_dft TECH=U18 CLK=10
+make tmax_dft     TECH=U18 CLK=10
 ```
 > 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。
 
