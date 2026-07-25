@@ -90,10 +90,30 @@ design_flow/
 ```tcl
 cd ../..
 source common/scripts/setup.tcl
+set TECH_TOOL "dc"   ;# 或 pt / fm
+source common/scripts/load_tech.tcl
 ```
 
 - **禁止**寫死 `/home/...`、`/usr/cad/...` 等絕對路徑
-- Library 請放到 `lib/stdcell`（或只改 `common/scripts/setup.tcl` 裡的相對變數）
+- 製程 library setup 放在 `lib/<TECH>/setup_*.tcl`
+
+### 製程切換（TECH）
+
+```bash
+make syn TECH=tsmc18
+make syn TECH=tsmc90
+make syn TECH=tsmc13
+make pt  TECH=tsmc18   # 請與 syn 使用同一 TECH
+```
+
+| TECH | Setup 目錄 |
+| :--- | :--- |
+| `tsmc18`（預設） | `lib/tsmc18/` |
+| `tsmc90` | `lib/tsmc90/` |
+| `tsmc13` | `lib/tsmc13/` |
+
+新增製程：建立 `lib/<name>/`，放入 `setup_dc.tcl` / `setup_pt.tcl` / `setup_fm.tcl`，再 `make syn TECH=<name>`。  
+詳見 [`lib/README.md`](lib/README.md)。
 
 ### 串接關係
 
@@ -101,9 +121,9 @@ source common/scripts/setup.tcl
 rtl/src/${TOP}.v
     → spyglass/
     → syn/netlist/${TOP}_syn.v  (+ ${TOP}_syn.sdc, report/${TOP}.svf)
-         → lec/
+         → lec/   (TECH 與 syn 相同)
          → tmax/
-         → primetime/
+         → primetime/  (TECH 與 syn 相同)
          → apr/ (Innovus) → apr/def, apr/gds
 ```
 
@@ -140,8 +160,8 @@ TOP ?= YOUR_MODULE
 ### 3. 放入 library（相對路徑）
 
 ```bash
-# 範例：把慢角 db 放到相對目錄（檔名需對應 setup.tcl）
-cp slow.db lib/stdcell/
+# 範例：tsmc18 慢角 db（檔名需對應 lib/tsmc18/setup_dc.tcl）
+cp slow.db lib/tsmc18/stdcell/
 ```
 
 ### 4. 依序執行（需工作站 EDA license）
@@ -149,12 +169,12 @@ cp slow.db lib/stdcell/
 ```bash
 cd design_flow
 make help
-make spyglass      # Lint + CDC
-make syn           # compile_ultra → syn/netlist
-make lec           # RTL vs syn netlist
+make spyglass
+make syn TECH=tsmc18    # compile_ultra → syn/netlist
+make lec TECH=tsmc18
 make tmax
-make pt            # 讀 syn netlist + sdc
-make apr           # Innovus
+make pt  TECH=tsmc18
+make apr
 ```
 
 > 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。

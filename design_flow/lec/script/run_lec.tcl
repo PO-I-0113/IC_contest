@@ -8,12 +8,16 @@
 cd ../..
 source common/scripts/setup.tcl
 
+# 載入製程 setup（與 syn 使用相同 TECH）
+set TECH_TOOL "fm"
+source common/scripts/load_tech.tcl
+
 file mkdir lec/report
 file mkdir lec/session
 
 if {![file exists $SYN_NETLIST]} {
     puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn"
+    puts "ERROR: 請先執行 make syn TECH=$TECH"
     exit 1
 }
 

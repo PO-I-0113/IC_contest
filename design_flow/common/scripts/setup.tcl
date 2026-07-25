@@ -6,13 +6,18 @@
 #   2. 呼叫端已執行：cd ../..
 #      使目前工作目錄 = design_flow/
 #   3. 再 source：source common/scripts/setup.tcl
+#   4. 需要 library 時再：
+#        set TECH_TOOL dc|pt|fm
+#        source common/scripts/load_tech.tcl
 #
-# 所有路徑皆相對於 design_flow/，禁止寫死絕對路徑。
-# Library 請用相對路徑放在 lib/，或自行改下方變數（仍請保持相對路徑）。
+# 製程選擇：TECH（預設 tsmc18），對應 lib/<TECH>/setup_*.tcl
 # ============================================================
 
 if {![info exists TOP]} {
     set TOP "DESIGN_TOP"
+}
+if {![info exists TECH]} {
+    set TECH "tsmc18"
 }
 
 # ---------- RTL / SIM ----------
@@ -57,15 +62,11 @@ set APR_DEF     "apr/def/${TOP}.def"
 set APR_GDS     "apr/gds/${TOP}.gds"
 set APR_REPORT  "apr/report"
 
-# ---------- 共用 Library（相對路徑；請自行放入或建立 symlink）----------
-set LIB_STDCELL "lib/stdcell"
-set LIB_MEMORY  "lib/memory"
-set LIB_TECH    "lib/tech"
+# ---------- 製程目錄（library 設定由 load_tech.tcl 載入）----------
+set TECH_DIR     "lib/${TECH}"
+set LIB_MEMORY   "lib/memory"
+set LIB_TECH     "lib/tech"
 
-# 標準元件 db/lib 檔名（依你放入 lib/stdcell 的實際檔名修改）
-set TARGET_LIB_FILE "${LIB_STDCELL}/slow.db"
-set LINK_LIB_FILE   "${LIB_STDCELL}/slow.db"
-
-puts "INFO: \[setup.tcl\] TOP=$TOP  (cwd=[pwd])"
+puts "INFO: \[setup.tcl\] TOP=$TOP  TECH=$TECH  (cwd=[pwd])"
+puts "INFO: \[setup.tcl\] TECH_DIR=$TECH_DIR"
 puts "INFO: \[setup.tcl\] SYN_NETLIST=$SYN_NETLIST"
-puts "INFO: \[setup.tcl\] SYN_SDC=$SYN_SDC"

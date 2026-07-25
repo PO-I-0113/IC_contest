@@ -1,6 +1,6 @@
 # ============================================================
 # Design Compiler — compile_ultra
-# 執行：cd syn/script && dc_shell -f run_syn.tcl
+# 執行：make syn TECH=tsmc18
 # 路徑：一律相對 design_flow/
 # 產出：syn/netlist/${TOP}_syn.v  → 供 LEC / PT / TMAX / APR 串接
 # ============================================================
@@ -9,18 +9,12 @@
 cd ../..
 source common/scripts/setup.tcl
 
+# 載入製程 library setup（lib/<TECH>/setup_dc.tcl）
+set TECH_TOOL "dc"
+source common/scripts/load_tech.tcl
+
 file mkdir syn/netlist
 file mkdir syn/report
-
-# ---------- Library（相對路徑；請先把 .db 放到 lib/stdcell/）----------
-set_app_var search_path    ". $INC_DIR $RTL_DIR $LIB_STDCELL"
-set_app_var target_library "$TARGET_LIB_FILE"
-set_app_var link_library   "* $LINK_LIB_FILE"
-# set_app_var symbol_library "${LIB_STDCELL}/slow.sdb"
-
-# 競賽常見 wire load（無物理資訊時）
-# set_wire_load_mode top
-# set_wire_load_model -name "ZeroWireload" -library <libname>
 
 # ---------- Read RTL ----------
 # defines.vh 透過 search_path / `include 引入，不單獨 analyze
@@ -63,7 +57,7 @@ report_constraint -all_violators > $SYN_REPORT/constraint.rpt
 report_qor                   > $SYN_REPORT/qor.rpt
 report_reference             > $SYN_REPORT/reference.rpt
 
-puts "INFO: SYN done."
+puts "INFO: SYN done. TECH=$TECH"
 puts "INFO: netlist = $SYN_NETLIST"
 puts "INFO: sdc_out = $SYN_SDC_OUT"
 exit

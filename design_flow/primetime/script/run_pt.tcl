@@ -7,19 +7,19 @@
 cd ../..
 source common/scripts/setup.tcl
 
+# 載入製程 library setup（需與 syn 使用相同 TECH）
+set TECH_TOOL "pt"
+source common/scripts/load_tech.tcl
+
 file mkdir primetime/report
 file mkdir primetime/constraint
 file mkdir primetime/spef
 
 if {![file exists $SYN_NETLIST]} {
     puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn"
+    puts "ERROR: 請先執行 make syn TECH=$TECH"
     exit 1
 }
-
-# ---------- Library（相對路徑）----------
-set_app_var search_path ". $LIB_STDCELL"
-set_app_var link_path   "* $LINK_LIB_FILE"
 
 # ---------- Design ----------
 read_verilog $SYN_NETLIST

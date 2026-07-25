@@ -2,19 +2,27 @@
 
 ## `setup.tcl`
 
-集中定義 `TOP` 與各階段相對路徑。
+集中定義 `TOP`、`TECH` 與各階段相對路徑（不含 library db 設定）。
 
-### 使用方式（各 TCL 開頭固定這樣寫）
+## `load_tech.tcl`
+
+依 `TECH` + `TECH_TOOL` 載入：
+
+```text
+lib/<TECH>/setup_<TECH_TOOL>.tcl
+```
+
+- `TECH_TOOL=dc` → `setup_dc.tcl`
+- `TECH_TOOL=pt` → `setup_pt.tcl`
+- `TECH_TOOL=fm` → `setup_fm.tcl`
+
+### 使用方式
 
 ```tcl
 cd ../..
 source common/scripts/setup.tcl
+set TECH_TOOL "dc"
+source common/scripts/load_tech.tcl
 ```
 
-前提：由 `design_flow/<stage>/script/` 啟動（Makefile 已這樣做）。
-
-### 路徑原則
-
-- 全部相對 `design_flow/`
-- **不要**使用 `/home/...`、`/usr/cad/...` 等絕對路徑
-- library 請放到 `lib/stdcell`（或改 `setup.tcl` 內相對路徑變數）
+Makefile 會透過 `-x 'set TOP ...; set TECH ...'` 傳入變數。
