@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # ============================================================
 # Gate-level 模擬（相對 design_flow/ 路徑）
-# 執行：make sim_gate CLK=10 TECH=U18 GATE_NET=auto
+# 執行：make sim_gate CLK=10 SCAN=0
+#       make sim_gate CLK=10 SCAN=1
+# GATE_NET 可覆寫：auto|syn|dft（預設依 SCAN）
 # ============================================================
 set -euo pipefail
 
@@ -11,18 +13,15 @@ cd "$(dirname "$0")/../.."
 TOP="${TOP:-DESIGN_TOP}"
 TECH="${TECH:-U18}"
 CLK="${CLK:-10}"
+SCAN="${SCAN:-0}"
 SIM="${SIM:-vcs}"
-GATE_NET="${GATE_NET:-auto}"   # auto | syn | dft
+GATE_NET="${GATE_NET:-}"       # 空 = 跟 SCAN；也可 syn|dft|auto
 TIMING="${TIMING:-1}"          # 1=做 timing check；0=+notimingcheck
 
 CLK_TAG="clk_${CLK}"
 NET_DIR="syn/netlist/${CLK_TAG}"
 RPT_DIR="syn/report/${CLK_TAG}"
-SIM_RPT="sim/report/${CLK_TAG}"
-WORK_DIR="work/sim_gate/${CLK_TAG}"
 TB_FILE="${TB_FILE:-sim/tb/tb_${TOP}.sv}"
-
-# 製程 verilog cell model（相對路徑；請放到 lib/<TECH>/stdcell/）
 TECH_VERILOG="${TECH_VERILOG:-lib/${TECH}/stdcell/typical.v}"
 
 NET_SYN="${NET_DIR}/${TOP}_syn.v"
@@ -30,21 +29,30 @@ NET_DFT="${NET_DIR}/${TOP}_syn_dft.v"
 SDF_SYN="${RPT_DIR}/${TOP}_syn.sdf"
 SDF_DFT="${RPT_DIR}/${TOP}_syn_dft.sdf"
 
+# SCAN → 預設選網表；GATE_NET 可覆寫
+if [[ -z "${GATE_NET}" ]]; then
+  if [[ "${SCAN}" == "1" ]]; then GATE_NET="dft"; else GATE_NET="syn"; fi
+fi
+
+NET_TAG="syn"
+[[ "${GATE_NET}" == "dft" || ( "${GATE_NET}" == "auto" && -f "${NET_DFT}" ) ]] && NET_TAG="dft"
+SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
+WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
 mkdir -p "${SIM_RPT}" "${WORK_DIR}"
 
 pick_net() {
   case "${GATE_NET}" in
     syn)
-      NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}" ;;
+      NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"; NET_TAG="syn" ;;
     dft)
-      NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}" ;;
+      NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft" ;;
     auto)
       if [[ -f "${NET_DFT}" ]]; then
-        NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"
-        echo "[sim_gate] GATE_NET=auto → 使用 DFT netlist"
+        NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft"
+        echo "[sim_gate] GATE_NET=auto → DFT netlist"
       else
-        NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"
-        echo "[sim_gate] GATE_NET=auto → 使用一般 syn netlist"
+        NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"; NET_TAG="syn"
+        echo "[sim_gate] GATE_NET=auto → syn netlist"
       fi
       ;;
     *)
@@ -53,8 +61,11 @@ pick_net() {
 }
 
 pick_net
+SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
+WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
+mkdir -p "${SIM_RPT}" "${WORK_DIR}"
 
-echo "[sim_gate] TOP=${TOP} TECH=${TECH} CLK=${CLK} SIM=${SIM}"
+echo "[sim_gate] TOP=${TOP} TECH=${TECH} CLK=${CLK} SCAN=${SCAN} GATE_NET=${GATE_NET}"
 echo "[sim_gate] NETLIST=${NETLIST}"
 echo "[sim_gate] SDF=${SDF_FILE}"
 echo "[sim_gate] TECH_VERILOG=${TECH_VERILOG}"

@@ -14,20 +14,22 @@ file mkdir $APR_REPORT
 file mkdir apr/lef
 file mkdir apr/lib
 
-if {![file exists $SYN_NETLIST]} {
-    puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn CLK=$CLK"
+if {![file exists $ACTIVE_NETLIST]} {
+    puts "ERROR: 找不到網表: $ACTIVE_NETLIST"
+    puts "ERROR: SCAN=$SCAN，請先 make syn 或 make syn_dft CLK=$CLK"
     exit 1
 }
 
+puts "INFO: APR 使用網表 SCAN=$SCAN → $ACTIVE_NETLIST"
+
 # ---------- 設計 / Library（相對路徑；請自行放入 lef/lib）----------
 set init_design_netlisttype Verilog
-set init_verilog $SYN_NETLIST
+set init_verilog $ACTIVE_NETLIST
 set init_top_cell $TOP
 
-# SDC：優先 SYN 輸出，其次 constraint
-if {[file exists $SYN_SDC_OUT]} {
-    set init_timing_file $SYN_SDC_OUT
+# SDC：優先對應網表輸出，其次 constraint
+if {[file exists $ACTIVE_SDC_OUT]} {
+    set init_timing_file $ACTIVE_SDC_OUT
 } else {
     set init_timing_file $SYN_SDC
 }

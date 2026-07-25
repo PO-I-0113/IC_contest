@@ -1,13 +1,13 @@
 # ============================================================
 # PrimeTime STA
-# 輸入串接：syn/netlist/${TOP}_syn.v + syn constraint / syn sdc_out
-# 執行：cd primetime/script && pt_shell -f run_pt.tcl
+# SCAN=0 → *_syn.v ；SCAN=1 → *_syn_dft.v
+# 執行：make pt CLK=10 SCAN=0
+#       make pt CLK=10 SCAN=1
 # ============================================================
 
 cd ../..
 source common/scripts/setup.tcl
 
-# 載入製程 library setup（需與 syn 使用相同 TECH）
 set TECH_TOOL "pt"
 source common/scripts/load_tech.tcl
 
@@ -15,21 +15,27 @@ file mkdir $PT_REPORT
 file mkdir primetime/constraint
 file mkdir [file dirname $PT_SPEF]
 
-if {![file exists $SYN_NETLIST]} {
-    puts "ERROR: 找不到合成網表: $SYN_NETLIST"
-    puts "ERROR: 請先執行 make syn TECH=$TECH CLK=$CLK"
+if {![file exists $ACTIVE_NETLIST]} {
+    puts "ERROR: 找不到網表: $ACTIVE_NETLIST"
+    if {$SCAN == 1} {
+        puts "ERROR: SCAN=1，請先 make syn_dft TECH=$TECH CLK=$CLK"
+    } else {
+        puts "ERROR: SCAN=0，請先 make syn TECH=$TECH CLK=$CLK"
+    }
     exit 1
 }
 
+puts "INFO: PT 使用網表 SCAN=$SCAN → $ACTIVE_NETLIST"
+
 # ---------- Design ----------
-read_verilog $SYN_NETLIST
+read_verilog $ACTIVE_NETLIST
 link_design $TOP
 current_design $TOP
 
-# 優先使用 SYN 寫出的 SDC；若無則退回 syn/constraint
-if {[file exists $SYN_SDC_OUT]} {
-    puts "INFO: source $SYN_SDC_OUT"
-    source $SYN_SDC_OUT
+# SDC：優先對應網表輸出的 SDC
+if {[file exists $ACTIVE_SDC_OUT]} {
+    puts "INFO: source $ACTIVE_SDC_OUT"
+    source $ACTIVE_SDC_OUT
 } elseif {[file exists $SYN_SDC]} {
     puts "INFO: source $SYN_SDC"
     source $SYN_SDC
@@ -38,7 +44,22 @@ if {[file exists $SYN_SDC_OUT]} {
     exit 1
 }
 
-# 若有 post-layout SPEF（相對路徑），讀入後做較準確 STA
+# SCAN=1 時可選：將 scan_en 設為功能模式，避免測試路徑干擾功能 STA
+if {$SCAN == 1} {
+    foreach p $SCAN_EN_PORTS {
+        if {[sizeof_collection [get_ports $p -quiet]] > 0} {
+            set_case_analysis 0 [get_ports $p]
+            puts "INFO: set_case_analysis 0 \[get_ports $p\]"
+        }
+    }
+    foreach p $TEST_MODE_PORTS {
+        if {[sizeof_collection [get_ports $p -quiet]] > 0} {
+            set_case_analysis 0 [get_ports $p]
+            puts "INFO: set_case_analysis 0 \[get_ports $p\]"
+        }
+    }
+}
+
 if {[file exists $PT_SPEF]} {
     puts "INFO: read_parasitics $PT_SPEF"
     read_parasitics $PT_SPEF
@@ -56,5 +77,7 @@ report_clock                                > $PT_REPORT/clock.rpt
 report_qor                                  > $PT_REPORT/qor.rpt
 report_global_timing                        > $PT_REPORT/global_timing.rpt
 
-puts "INFO: PrimeTime done. reports -> $PT_REPORT"
+puts "INFO: PrimeTime done. SCAN=$SCAN NET_TAG=$NET_TAG"
+puts "INFO: netlist = $ACTIVE_NETLIST"
+puts "INFO: report  = $PT_REPORT"
 exit

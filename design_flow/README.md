@@ -119,35 +119,40 @@ make pt  TECH=U18      # 請與 syn 使用同一 TECH
 
 詳見 [`lib/README.md`](lib/README.md)。
 
-### Clock 分層（CLK）
+### Clock 分層（CLK）+ Scan 分層（SCAN）
 
 ```bash
-make syn     CLK=10
-make syn     CLK=6
-make syn_dft CLK=10 TECH=U18
-make pt      CLK=10 TECH=U18
+make syn     CLK=10              # → *_syn.v
+make syn_dft CLK=10 TECH=U18     # → *_syn_dft.v
+make pt      CLK=10 SCAN=0       # 用一般 syn
+make pt      CLK=10 SCAN=1       # 用 DFT/scan
+make lec     CLK=10 SCAN=1
+make sim_gate CLK=10 SCAN=1
+make tmax    CLK=10 SCAN=1
+make apr     CLK=10 SCAN=1
 ```
 
-產出目錄範例（`CLK=10` → `clk_10`）：
+| 變數 | 意義 |
+| :--- | :--- |
+| `CLK=10` | 目錄 `clk_10/`，對應不同 clock constraint |
+| `SCAN=0` | 後段讀 `*_syn.v`（無 scan） |
+| `SCAN=1` | 後段讀 `*_syn_dft.v`（有 scan） |
+
+產出範例：
 
 ```text
 syn/netlist/clk_10/${TOP}_syn.v
 syn/netlist/clk_10/${TOP}_syn_dft.v
-syn/report/clk_10/
-syn/dft_report/clk_10/
+primetime/report/clk_10/syn/     # SCAN=0
+primetime/report/clk_10/dft/     # SCAN=1
+lec/report/clk_10/dft/
 ```
-
-SDC 優先讀取 `syn/constraint/${TOP}_clk${CLK}.sdc`，否則 `${TOP}.sdc`。
 
 ### 串接關係
 
 ```text
-rtl/src/${TOP}.v
-    → spyglass/
-    → syn/netlist/clk_<CLK>/${TOP}_syn.v       (make syn)
-    → syn/netlist/clk_<CLK>/${TOP}_syn_dft.v   (make syn_dft)
-         → lec / pt / apr  （相同 TECH + CLK）
-         → tmax  （優先用 *_syn_dft.v）
+make syn      → *_syn.v      → 後段 SCAN=0（lec/pt/sim_gate/apr）
+make syn_dft  → *_syn_dft.v  → 後段 SCAN=1（lec/pt/sim_gate/tmax/apr）
 ```
 
 ---
@@ -193,22 +198,20 @@ cp slow.db lib/U18/stdcell/
 cd design_flow
 make help
 make spyglass
-make syn     TECH=U18 CLK=10    # 無 scan
-make syn_dft TECH=U18 CLK=10    # 含 scan chain → dft_report/clk_10
-make sim_gate TECH=U18 CLK=10   # gate sim（預設優先 DFT netlist + SDF）
-make lec     TECH=U18 CLK=10
-make tmax             CLK=10    # 優先讀 *_syn_dft.v
-make pt      TECH=U18 CLK=10
-make apr              CLK=10
-```
 
-Gate sim 選項：
+# 路徑 A：無 scan
+make syn      TECH=U18 CLK=10
+make lec      TECH=U18 CLK=10 SCAN=0
+make pt       TECH=U18 CLK=10 SCAN=0
+make sim_gate TECH=U18 CLK=10 SCAN=0
 
-```bash
-make sim_gate CLK=10 GATE_NET=auto   # 有 DFT 用 DFT，否則 syn
-make sim_gate CLK=10 GATE_NET=syn
-make sim_gate CLK=10 GATE_NET=dft
-make sim_gate CLK=10 TIMING=0        # +notimingcheck
+# 路徑 B：有 scan
+make syn_dft  TECH=U18 CLK=10
+make lec      TECH=U18 CLK=10 SCAN=1
+make pt       TECH=U18 CLK=10 SCAN=1
+make sim_gate TECH=U18 CLK=10 SCAN=1
+make tmax     TECH=U18 CLK=10 SCAN=1
+make apr      TECH=U18 CLK=10 SCAN=1
 ```
 > 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。
 

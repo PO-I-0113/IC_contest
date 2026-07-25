@@ -15,16 +15,17 @@ make sim SIM=vcs
 3. 製程 verilog：`lib/<TECH>/stdcell/typical.v`
 
 ```bash
-make sim_gate TECH=U18 CLK=10
-make sim_gate TECH=U18 CLK=10 GATE_NET=dft
-make sim_gate TECH=U18 CLK=10 GATE_NET=syn TIMING=0
+make sim_gate TECH=U18 CLK=10 SCAN=0
+make sim_gate TECH=U18 CLK=10 SCAN=1
+make sim_gate TECH=U18 CLK=10 SCAN=1 TIMING=0
 ```
 
 | 變數 | 預設 | 說明 |
 | :--- | :--- | :--- |
-| `GATE_NET` | `auto` | `auto` / `syn` / `dft` |
+| `SCAN` | `0` | `0`→syn netlist；`1`→dft netlist |
+| `GATE_NET` | （跟 SCAN） | 可強制 `syn` / `dft` / `auto` |
 | `TIMING` | `1` | `0` 時加 `+notimingcheck` |
-| `TECH_VERILOG` | `lib/<TECH>/stdcell/typical.v` | cell model 相對路徑 |
+| `TECH_VERILOG` | `lib/<TECH>/stdcell/typical.v` | cell model |
 | `SIM` | `vcs` | `vcs` / `xrun` / `ncverilog` |
 
-Log：`sim/report/clk_<CLK>/sim_gate_<GATE_NET>.log`
+Log：`sim/report/clk_<CLK>/syn|dft/sim_gate_*.log`
