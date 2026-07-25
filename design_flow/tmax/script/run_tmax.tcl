@@ -1,24 +1,40 @@
 # ============================================================
-# TetraMAX ATPG 模板
+# TetraMAX ATPG
+# 輸入串接：syn/netlist/${TOP}_syn.v
+# 執行：cd tmax/script && tmax -shell run_tmax.tcl
 # ============================================================
 
-set TOP     "DESIGN_TOP"
-set ROOT    [file normalize [file join [pwd] ../..]]
-set NETLIST [file join $ROOT syn netlist ${TOP}_syn.v]
-set RPT_DIR [file join $ROOT tmax report]
-set PAT_DIR [file join $ROOT tmax pattern]
+cd ../..
+source common/scripts/setup.tcl
 
-file mkdir $RPT_DIR
-file mkdir $PAT_DIR
+file mkdir tmax/report
+file mkdir tmax/pattern
 
-# read_netlist $NETLIST
-# run_build_model $TOP
-# run_drc
-# set_faults -model stuck
-# run_atpg -auto_compression
-# report_faults -summary > [file join $RPT_DIR fault_summary.rpt]
-# write_patterns [file join $PAT_DIR ${TOP}_atpg.v] -format verilog_single_file
+if {![file exists $SYN_NETLIST]} {
+    puts "ERROR: 找不到合成網表: $SYN_NETLIST"
+    puts "ERROR: 請先執行 make syn"
+    exit 1
+}
 
-puts "INFO: TetraMAX template loaded. TOP=$TOP"
-puts "INFO: Edit tmax/script/run_tmax.tcl before running."
+# ---------- Build / DRC / ATPG ----------
+read_netlist $SYN_NETLIST
+run_build_model $TOP
+run_drc
+
+# Stuck-at 為競賽 / 入門 DFT 常見設定
+set_faults -model stuck
+add_faults -all
+
+run_atpg -auto_compression
+
+# ---------- Output ----------
+report_summaries               > $TMAX_REPORT/summary.rpt
+report_faults -summary         > $TMAX_REPORT/fault_summary.rpt
+report_faults -level 4 100     > $TMAX_REPORT/fault_detail.rpt
+
+write_patterns $TMAX_PATTERN -format verilog_single_file -replace
+
+puts "INFO: TetraMAX done."
+puts "INFO: pattern = $TMAX_PATTERN"
+puts "INFO: report  = $TMAX_REPORT"
 exit

@@ -1,6 +1,7 @@
 # ============================================================
 # IC Design Flow Makefile (方案 A)
-# 流程: SIM → COV → SpyGlass → SYN → LEC → TMAX → PT → APR
+# 流程: SIM → COV → SpyGlass → SYN → LEC → TMAX → PT → APR(Innovus)
+# 路徑規則: 全部相對 design_flow/；各 TCL 會先 cd ../.. 再 source setup
 # ============================================================
 
 # ---------- 使用者設定 ----------
@@ -10,10 +11,8 @@ TB_FILE  ?= sim/tb/tb_$(TOP).sv
 FILELIST ?= rtl/filelist.f
 
 SIM      ?= vcs          # vcs | xrun
-COV_DIR  ?= cov/report
 WORK     ?= work
 
-# ---------- 顏色（可選）----------
 GREEN := \033[0;32m
 NC    := \033[0m
 
@@ -21,87 +20,75 @@ NC    := \033[0m
 
 help:
 	@echo ""
-	@echo "IC Design Flow targets:"
+	@echo "IC Design Flow targets (cwd = design_flow/):"
 	@echo "  make start       - 建立 work 目錄"
 	@echo "  make sim         - RTL 功能模擬"
 	@echo "  make cov         - Code Coverage"
-	@echo "  make spyglass    - SpyGlass Lint/CDC"
-	@echo "  make syn         - Design Compiler 合成"
+	@echo "  make spyglass    - SpyGlass Lint + CDC"
+	@echo "  make syn         - Design Compiler (compile_ultra)"
 	@echo "  make lec         - Formality LEC"
 	@echo "  make tmax        - TetraMAX ATPG"
 	@echo "  make pt          - PrimeTime STA"
-	@echo "  make apr         - APR (ICC2/Innovus)"
-	@echo "  make clean       - 清理 work 與常見暫存"
+	@echo "  make apr         - Innovus APR"
+	@echo "  make clean       - 清理 work / log"
 	@echo ""
-	@echo "變數範例: make sim TOP=REFRACT SIM=vcs"
+	@echo "範例: make syn TOP=DESIGN_TOP"
+	@echo "路徑: 請維持相對路徑，勿改成絕對路徑"
 	@echo ""
 
 start:
-	@mkdir -p $(WORK)
-	@echo "$(GREEN)[INFO]$(NC) work/ ready"
-
-# ---------- SIM ----------
-sim: start
 	@mkdir -p $(WORK)/sim
+	@mkdir -p syn/report lec/report tmax/report primetime/report apr/report spyglass/report cov/report
+	@echo "$(GREEN)[INFO]$(NC) work/ and report dirs ready"
+
+# ---------- SIM（在 design_flow 根目錄用相對路徑）----------
+sim: start
 ifeq ($(SIM),vcs)
-	cd $(WORK)/sim && vcs -full64 -sverilog -debug_access+all \
-		-f ../../$(FILELIST) ../../$(TB_FILE) \
-		-o simv && ./simv | tee sim.log
+	vcs -full64 -sverilog -debug_access+all \
+		-f $(FILELIST) $(TB_FILE) \
+		-o $(WORK)/sim/simv
+	./$(WORK)/sim/simv | tee $(WORK)/sim/sim.log
 else
-	cd $(WORK)/sim && xrun -sv -f ../../$(FILELIST) ../../$(TB_FILE) \
-		| tee sim.log
+	xrun -sv -f $(FILELIST) $(TB_FILE) | tee $(WORK)/sim/sim.log
 endif
 
 # ---------- COV ----------
 cov: start
-	@echo "$(GREEN)[INFO]$(NC) Run coverage script"
 	cd cov/script && bash run_cov.sh $(TOP) $(SIM)
 
 # ---------- SpyGlass ----------
-spyglass:
-	@echo "$(GREEN)[INFO]$(NC) Run SpyGlass"
+spyglass: start
 	cd spyglass/script && sg_shell -tcl run_spyglass.tcl
 
 # ---------- SYN ----------
-syn:
-	@echo "$(GREEN)[INFO]$(NC) Run Design Compiler"
+syn: start
 	cd syn/script && dc_shell -f run_syn.tcl | tee ../report/syn.log
 
-# ---------- LEC (Formality) ----------
-lec:
-	@echo "$(GREEN)[INFO]$(NC) Run Formality LEC"
+# ---------- LEC ----------
+lec: start
 	cd lec/script && fm_shell -f run_lec.tcl | tee ../report/lec.log
 
 # ---------- TMAX ----------
-tmax:
-	@echo "$(GREEN)[INFO]$(NC) Run TetraMAX"
+tmax: start
 	cd tmax/script && tmax -shell run_tmax.tcl | tee ../report/tmax.log
 
 # ---------- PrimeTime ----------
-pt:
-	@echo "$(GREEN)[INFO]$(NC) Run PrimeTime"
+pt: start
 	cd primetime/script && pt_shell -f run_pt.tcl | tee ../report/pt.log
 
-# ---------- APR ----------
-apr:
-	@echo "$(GREEN)[INFO]$(NC) Run APR"
+# ---------- APR (Innovus) ----------
+apr: start
 	cd apr/script && bash run_apr.sh
 
 # ---------- Clean ----------
 clean:
 	rm -rf $(WORK)
-	rm -f syn/report/*.log lec/report/*.log tmax/report/*.log primetime/report/*.log
+	rm -f syn/report/*.log lec/report/*.log tmax/report/*.log \
+	      primetime/report/*.log apr/report/*.log
 
 clean_all: clean
-	rm -rf syn/netlist/* syn/report/* \
-	       lec/report/* lec/session/* \
-	       tmax/report/* tmax/pattern/* \
-	       primetime/report/* primetime/spef/* \
-	       apr/def/* apr/gds/* apr/report/* \
-	       cov/report/* spyglass/report/*
-	@# 保留 .gitkeep
 	@find syn/netlist syn/report lec/report lec/session \
 	      tmax/report tmax/pattern primetime/report primetime/spef \
 	      apr/def apr/gds apr/report cov/report spyglass/report \
-	      -name .gitkeep -prune -o -type f -exec rm -f {} + 2>/dev/null || true
+	      -type f ! -name '.gitkeep' -delete 2>/dev/null || true
 	@echo "$(GREEN)[INFO]$(NC) cleaned generated outputs"

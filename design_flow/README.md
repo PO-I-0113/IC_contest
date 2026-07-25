@@ -72,13 +72,40 @@ design_flow/
 | 2 | SIM | `sim/` | VCS / xrun | 功能驗證通過 |
 | 3 | COV | `cov/` | VCS/xrun Coverage | coverage report |
 | 4 | SpyGlass | `spyglass/` | SpyGlass | Lint / CDC clean |
-| 5 | SYN | `syn/` | Design Compiler | gate netlist + SDC |
+| 5 | SYN | `syn/` | Design Compiler (`compile_ultra`) | gate netlist + SDC + SVF |
 | 6 | LEC | `lec/` | Formality | RTL vs Netlist 等價 |
 | 7 | TMAX | `tmax/` | TetraMAX | ATPG pattern |
 | 8 | PT | `primetime/` | PrimeTime | STA report |
-| 9 | APR | `apr/` | ICC2 / Innovus | DEF / GDS |
+| 9 | APR | `apr/` | **Innovus** | DEF / GDS |
 
 詳細簽核項目見：[`doc/flow_checklist.md`](doc/flow_checklist.md)
+
+---
+
+## 路徑規則（嚴格相對路徑）
+
+- 所有 TCL / Makefile / filelist **只使用相對 `design_flow/` 的路徑**
+- 各階段 script 開頭固定：
+
+```tcl
+cd ../..
+source common/scripts/setup.tcl
+```
+
+- **禁止**寫死 `/home/...`、`/usr/cad/...` 等絕對路徑
+- Library 請放到 `lib/stdcell`（或只改 `common/scripts/setup.tcl` 裡的相對變數）
+
+### 串接關係
+
+```text
+rtl/src/${TOP}.v
+    → spyglass/
+    → syn/netlist/${TOP}_syn.v  (+ ${TOP}_syn.sdc, report/${TOP}.svf)
+         → lec/
+         → tmax/
+         → primetime/
+         → apr/ (Innovus) → apr/def, apr/gds
+```
 
 ---
 
@@ -100,29 +127,37 @@ cp your_design.sdc syn/constraint/
 
 ### 2. 修改頂層名稱
 
-編輯 `Makefile` 頂部變數：
+同時改：
+
+- `Makefile` 的 `TOP`
+- `common/scripts/setup.tcl` 預設 `TOP`（若不用 make 傳入）
+- `syn/constraint/${TOP}.sdc` 檔名
 
 ```makefile
-TOP      ?= YOUR_MODULE
-RTL_FILE ?= rtl/src/YOUR_MODULE.v
-TB_FILE  ?= sim/tb/tb_YOUR_MODULE.sv
+TOP ?= YOUR_MODULE
 ```
 
-### 3. 依序執行（需本機已安裝對應 EDA）
+### 3. 放入 library（相對路徑）
 
 ```bash
-make help          # 查看所有目標
-make sim           # RTL 模擬
-make cov           # Code Coverage
-make spyglass      # Lint / CDC
-make syn           # 合成
-make lec           # Formality LEC
-make tmax          # ATPG
-make pt            # PrimeTime STA
-make apr           # Place & Route
+# 範例：把慢角 db 放到相對目錄（檔名需對應 setup.tcl）
+cp slow.db lib/stdcell/
 ```
 
-> **注意：** 本 repo 只提供目錄與腳本骨架。實際執行需在有 license 的工作站上操作。
+### 4. 依序執行（需工作站 EDA license）
+
+```bash
+cd design_flow
+make help
+make spyglass      # Lint + CDC
+make syn           # compile_ultra → syn/netlist
+make lec           # RTL vs syn netlist
+make tmax
+make pt            # 讀 syn netlist + sdc
+make apr           # Innovus
+```
+
+> 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。
 
 ---
 
@@ -140,29 +175,30 @@ make apr           # Place & Route
 - 目標與 exclusion 放在 `cov/config/`
 
 ### `spyglass/` — 靜態檢查
-- Lint、CDC、RDC
-- waiver 統一放 `spyglass/waiver/`，避免散落
+- 預設跑 **Lint + CDC**
+- waiver 統一放 `spyglass/waiver/`
 
 ### `syn/` — 合成
-- 輸入：`rtl/` + `syn/constraint/*.sdc`
-- 輸出：`syn/netlist/*_syn.v`、report
+- `compile_ultra`（可加 `-gate_clock`）
+- 輸入：`rtl/` + `syn/constraint/*.sdc`（競賽常見半週期 I/O delay）
+- 輸出：`syn/netlist/*_syn.v`、`*_syn.sdc`、`syn/report/*.svf`
 
 ### `lec/` — Formality（邏輯等價）
-- 比對 **RTL（golden）** vs **Syn netlist（revised）**
-- 合成後、ECO 後都應重跑
-- session 檔可放 `lec/session/` 方便 debug
+- Golden：RTL／Revised：`syn/netlist/*_syn.v`
+- 自動讀取 `syn/report/*.svf`（若存在）
 
 ### `tmax/` — DFT / ATPG
-- 依賴合成網表（與 DFT 插樁結果，依專案而定）
-- pattern 產出放 `tmax/pattern/`
+- 讀取合成網表做 stuck-at ATPG
+- pattern → `tmax/pattern/`
 
 ### `primetime/` — STA
-- pre-layout：用 syn 後 netlist + SDC
-- post-layout：加上 `primetime/spef/` 寄生參數
+- 串接 syn netlist；優先 `syn/netlist/*_syn.sdc`
+- 若有 `primetime/spef/*.spef` 則做 post-layout STA
 
-### `apr/` — 佈局繞線
-- 輸入：netlist、SDC、lib、lef
-- 輸出：def / gds、繞線後報告
+### `apr/` — Innovus 佈局繞線
+- 串接 syn netlist + SDC
+- lef/lib 請放 `apr/lef`、`apr/lib`（相對路徑）
+- 輸出：`apr/def`、`apr/gds`
 
 ---
 

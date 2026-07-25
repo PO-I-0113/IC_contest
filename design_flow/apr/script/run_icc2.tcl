@@ -1,16 +1,10 @@
 # ============================================================
-# ICC2 APR 模板（示意）
+# ICC2 僅保留空殼（本 flow 預設使用 Innovus）
+# 若要改用 ICC2，請自行擴充；路徑請維持相對 design_flow/
 # ============================================================
 
-set TOP  "DESIGN_TOP"
-set ROOT [file normalize [file join [pwd] ../..]]
+cd ../..
+source common/scripts/setup.tcl
 
-# create_lib ...
-# read_verilog [file join $ROOT syn netlist ${TOP}_syn.v]
-# read_sdc     [file join $ROOT syn constraint ${TOP}.sdc]
-# # floorplan / place / cts / route ...
-# write_gds [file join $ROOT apr gds ${TOP}.gds]
-# write_def [file join $ROOT apr def ${TOP}.def]
-
-puts "INFO: ICC2 template — fill in process tech & flow commands."
+puts "INFO: 本 template 預設 APR 為 Innovus，請執行 run_innovus.tcl"
 exit
