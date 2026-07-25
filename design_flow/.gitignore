@@ -1,0 +1,77 @@
+# 工作暫存
+work/
+*.log
+*.tmp
+*~
+
+# 模擬 / Coverage
+*.fsdb
+*.vcd
+*.vpd
+*.key
+*.history
+DVEfiles/
+simv*
+csrc/
+*.daidir/
+urgReport/
+cov_work/
+*.vdb/
+sim/report/**
+!sim/report/.gitkeep
+
+
+# SpyGlass
+spyglass/report/*
+!spyglass/report/.gitkeep
+*.sgdc
+*.awl
+
+# Synthesis（含 clk_* 子目錄與 DFT report）
+syn/netlist/**
+!syn/netlist/.gitkeep
+syn/report/**
+!syn/report/.gitkeep
+syn/dft_report/**
+!syn/dft_report/.gitkeep
+*_syn.ddc
+*_syn_dft.ddc
+alib-52/
+command.log
+default.svf
+filenames*
+*_lib/
+
+# LEC / Formality
+lec/report/*
+!lec/report/.gitkeep
+lec/session/*
+!lec/session/.gitkeep
+*.fss
+fm_shell_command.log
+
+# TetraMAX
+tmax/report/*
+!tmax/report/.gitkeep
+tmax/pattern/*
+!tmax/pattern/.gitkeep
+
+# PrimeTime
+primetime/report/*
+!primetime/report/.gitkeep
+primetime/spef/*
+!primetime/spef/.gitkeep
+
+# APR
+apr/def/*
+!apr/def/.gitkeep
+apr/gds/*
+!apr/gds/.gitkeep
+apr/report/*
+!apr/report/.gitkeep
+
+# 編輯器 / OS
+.DS_Store
+.vscode/
+*.swp
+*.swo
