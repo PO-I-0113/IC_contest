@@ -3,7 +3,7 @@
 # ------------------------------------------------------------
 # TECH : 製程（U18 / TSMC13 / ADFP / TN16 / TN7）
 # CLK  : 時脈週期分層 → clk_<CLK>/
-# SCAN : 0 = 一般 syn netlist；1 = DFT/scan netlist
+# SCAN : 預設 0 = 不用 scan（*_syn.v）；1 = DFT（*_syn_dft.v）
 # ============================================================
 
 if {![info exists TOP]} {
@@ -15,8 +15,9 @@ if {![info exists TECH]} {
 if {![info exists CLK]} {
     if {[info exists ::env(CLK)]} { set CLK $::env(CLK) } else { set CLK "10" }
 }
+# 預設不用 scan
 if {![info exists SCAN]} {
-    if {[info exists ::env(SCAN)]} { set SCAN $::env(SCAN) } else { set SCAN "0" }
+    if {[info exists ::env(SCAN)]} { set SCAN $::env(SCAN) } else { set SCAN 0 }
 }
 
 # 正規化 SCAN

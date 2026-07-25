@@ -17,8 +17,8 @@ if {![file exists $ACTIVE_NETLIST]} {
 }
 
 if {$SCAN == 0} {
-    puts "WARN: SCAN=0 使用無 scan 網表做 ATPG，覆蓋率通常不佳"
-    puts "WARN: 建議 make tmax SCAN=1"
+    puts "WARN: 目前 SCAN=0（預設不用 scan）。ATPG 通常需要 scan chain："
+    puts "WARN:   make syn_dft CLK=$CLK && make tmax SCAN=1 CLK=$CLK"
 }
 
 puts "INFO: ATPG 使用網表 SCAN=$SCAN → $ACTIVE_NETLIST"

@@ -85,7 +85,7 @@ if {$SCAN == 1} {
     # set_dont_verify_points -type port i:/WORK/$TOP/SI*
     # set_dont_verify_points -type port i:/WORK/$TOP/SO*
 
-    report_constants > $LEC_REPORT/constants.rpt
+    catch {report_constants > $LEC_REPORT/constants.rpt}
 } else {
     puts "INFO: SCAN=0 → 一般 syn netlist LEC"
 }

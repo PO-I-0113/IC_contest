@@ -121,38 +121,35 @@ make pt  TECH=U18      # 請與 syn 使用同一 TECH
 
 ### Clock 分層（CLK）+ Scan 分層（SCAN）
 
+**預設 `SCAN=0`（不用 scan）**，一般指令可省略 `SCAN`：
+
 ```bash
-make syn     CLK=10              # → *_syn.v
-make syn_dft CLK=10 TECH=U18     # → *_syn_dft.v
-make pt      CLK=10 SCAN=0       # 用一般 syn
-make pt      CLK=10 SCAN=1       # 用 DFT/scan
-make lec     CLK=10 SCAN=1
+make syn      CLK=10
+make lec      CLK=10
+make pt       CLK=10
+make sim_gate CLK=10
+```
+
+需要 DFT 時再打開 `SCAN=1`：
+
+```bash
+make syn_dft  CLK=10
+make lec      CLK=10 SCAN=1
+make pt       CLK=10 SCAN=1
 make sim_gate CLK=10 SCAN=1
-make tmax    CLK=10 SCAN=1
-make apr     CLK=10 SCAN=1
+make tmax     CLK=10 SCAN=1
 ```
 
-| 變數 | 意義 |
-| :--- | :--- |
-| `CLK=10` | 目錄 `clk_10/`，對應不同 clock constraint |
-| `SCAN=0` | 後段讀 `*_syn.v`（無 scan） |
-| `SCAN=1` | 後段讀 `*_syn_dft.v`（有 scan） |
-
-產出範例：
-
-```text
-syn/netlist/clk_10/${TOP}_syn.v
-syn/netlist/clk_10/${TOP}_syn_dft.v
-primetime/report/clk_10/syn/     # SCAN=0
-primetime/report/clk_10/dft/     # SCAN=1
-lec/report/clk_10/dft/
-```
+| 變數 | 預設 | 意義 |
+| :--- | :--- | :--- |
+| `CLK` | `10` | 目錄 `clk_10/` |
+| `SCAN` | `0` | `0`→`*_syn.v`；`1`→`*_syn_dft.v` |
 
 ### 串接關係
 
 ```text
-make syn      → *_syn.v      → 後段 SCAN=0（lec/pt/sim_gate/apr）
-make syn_dft  → *_syn_dft.v  → 後段 SCAN=1（lec/pt/sim_gate/tmax/apr）
+預設： make syn     → *_syn.v     → lec/pt/sim_gate/apr（SCAN=0）
+可選： make syn_dft → *_syn_dft.v → 後段加 SCAN=1
 ```
 
 ---
@@ -199,19 +196,17 @@ cd design_flow
 make help
 make spyglass
 
-# 路徑 A：無 scan
+# 預設路徑（不用 scan，可省略 SCAN）
 make syn      TECH=U18 CLK=10
-make lec      TECH=U18 CLK=10 SCAN=0
-make pt       TECH=U18 CLK=10 SCAN=0
-make sim_gate TECH=U18 CLK=10 SCAN=0
+make lec      TECH=U18 CLK=10
+make pt       TECH=U18 CLK=10
+make sim_gate TECH=U18 CLK=10
 
-# 路徑 B：有 scan
+# 可選：DFT/scan（要顯式 SCAN=1）
 make syn_dft  TECH=U18 CLK=10
 make lec      TECH=U18 CLK=10 SCAN=1
 make pt       TECH=U18 CLK=10 SCAN=1
-make sim_gate TECH=U18 CLK=10 SCAN=1
 make tmax     TECH=U18 CLK=10 SCAN=1
-make apr      TECH=U18 CLK=10 SCAN=1
 ```
 > 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。
 

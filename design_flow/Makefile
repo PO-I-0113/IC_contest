@@ -8,14 +8,14 @@
 TOP      ?= DESIGN_TOP
 TECH     ?= U18
 CLK      ?= 10
-SCAN     ?= 0            # 0=syn ；1=dft
+SCAN     ?= 0            # 預設 0=不用 scan；1=DFT netlist
 RTL_FILE ?= rtl/src/$(TOP).v
 TB_FILE  ?= sim/tb/tb_$(TOP).sv
 FILELIST ?= rtl/filelist.f
 
 SIM      ?= vcs
 WORK     ?= work
-# GATE_NET 可覆寫 sim_gate；空字串則跟 SCAN
+# GATE_NET 可覆寫 sim_gate；空字串則跟 SCAN（預設 syn）
 GATE_NET ?=
 TIMING   ?= 1
 TECH_VERILOG ?= lib/$(TECH)/stdcell/typical.v
@@ -39,24 +39,17 @@ help:
 	@echo "IC Design Flow (cwd = design_flow/)"
 	@echo "  make syn / syn_dft / sim / sim_gate / lec / pt / tmax / apr"
 	@echo ""
-	@echo "關鍵變數:"
-	@echo "  TECH=U18|TSMC13|ADFP|TN16|TN7"
-	@echo "  CLK=10                     → clk_10/"
-	@echo "  SCAN=0                     → 一般 syn netlist (*_syn.v)"
-	@echo "  SCAN=1                     → DFT/scan netlist (*_syn_dft.v)"
+	@echo "預設不用 scan（SCAN=0 → *_syn.v），一般可省略 SCAN："
+	@echo "  make syn CLK=10"
+	@echo "  make lec CLK=10"
+	@echo "  make pt  CLK=10"
+	@echo "  make sim_gate CLK=10"
 	@echo ""
-	@echo "合成後流程請帶相同 TECH/CLK/SCAN:"
-	@echo "  make syn_dft TECH=U18 CLK=10"
-	@echo "  make lec     TECH=U18 CLK=10 SCAN=1"
-	@echo "  make pt      TECH=U18 CLK=10 SCAN=1"
-	@echo "  make sim_gate TECH=U18 CLK=10 SCAN=1"
-	@echo "  make tmax    TECH=U18 CLK=10 SCAN=1"
-	@echo "  make apr     TECH=U18 CLK=10 SCAN=1"
+	@echo "需要 DFT/scan 時再顯式打開："
+	@echo "  make syn_dft CLK=10"
+	@echo "  make lec / pt / sim_gate / tmax / apr  SCAN=1 CLK=10"
 	@echo ""
-	@echo "無 scan 路徑:"
-	@echo "  make syn  CLK=10 && make lec SCAN=0 CLK=10 && make pt SCAN=0 CLK=10"
-	@echo ""
-	@echo "預設: TOP=$(TOP) TECH=$(TECH) CLK=$(CLK) SCAN=$(SCAN)"
+	@echo "變數: TECH=$(TECH)  CLK=$(CLK)  SCAN=$(SCAN)（0=syn, 1=dft）"
 	@echo ""
 
 start:

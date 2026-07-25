@@ -35,7 +35,6 @@ if [[ -z "${GATE_NET}" ]]; then
 fi
 
 NET_TAG="syn"
-[[ "${GATE_NET}" == "dft" || ( "${GATE_NET}" == "auto" && -f "${NET_DFT}" ) ]] && NET_TAG="dft"
 SIM_RPT="sim/report/${CLK_TAG}/${NET_TAG}"
 WORK_DIR="work/sim_gate/${CLK_TAG}/${NET_TAG}"
 mkdir -p "${SIM_RPT}" "${WORK_DIR}"
@@ -47,12 +46,15 @@ pick_net() {
     dft)
       NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft" ;;
     auto)
-      if [[ -f "${NET_DFT}" ]]; then
-        NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft"
-        echo "[sim_gate] GATE_NET=auto → DFT netlist"
-      else
+      # 預設不用 scan：優先 syn；沒有 syn 才退回 dft
+      if [[ -f "${NET_SYN}" ]]; then
         NETLIST="${NET_SYN}"; SDF_FILE="${SDF_SYN}"; NET_TAG="syn"
-        echo "[sim_gate] GATE_NET=auto → syn netlist"
+        echo "[sim_gate] GATE_NET=auto → syn netlist（預設不用 scan）"
+      elif [[ -f "${NET_DFT}" ]]; then
+        NETLIST="${NET_DFT}"; SDF_FILE="${SDF_DFT}"; NET_TAG="dft"
+        echo "[sim_gate] GATE_NET=auto → 無 syn，改用 DFT netlist"
+      else
+        echo "[ERROR] 找不到 syn/dft netlist"; exit 1
       fi
       ;;
     *)
