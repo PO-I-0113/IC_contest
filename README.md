@@ -20,14 +20,6 @@ Each project involves translating algorithmic specifications into synthesizable 
 * **Build System:** Makefile
 * **Process Technology:** TSMC .18um / 90nm / 130nm (Based on contest specs)
 
-## 🧭 IC Design Flow Template
-
-完整 EDA flow 骨架見 [`IC_Design_Flow/`](IC_Design_Flow/)：
-
-`rtl → sim → cov → spyglass → syn → lec → tmax → primetime → apr`
-
-含 Makefile、簽核 checklist，以及各階段腳本模板（Formality 目錄命名為 `lec/`）。詳見該目錄 README。
-
 ## 📊 Solution Summary
 
 > **Note:** Detailed architecture diagrams and synthesis reports can be found in each year's sub-directory.
@@ -147,7 +139,6 @@ Each project involves translating algorithmic specifications into synthesizable 
 │       ├── DFT/              # DFT/ATPG scripts
 │       ├── prime_time/       # PrimeTime scripts
 │       └── work/             # Build outputs and logs
-├── IC_Design_Flow/           # 完整 EDA flow template（含 LEC）
 ├── Makefile                  # Root Makefile template
 └── README.md
 ```

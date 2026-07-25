@@ -9,7 +9,7 @@
 ## 目錄結構
 
 ```text
-IC_Design_Flow/
+design_flow/
 ├── doc/                 # 規格、架構、簽核 checklist
 ├── rtl/                 # RTL 原始碼
 │   ├── include/         # header / define
