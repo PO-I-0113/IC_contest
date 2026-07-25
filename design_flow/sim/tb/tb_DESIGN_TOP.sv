@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // ------------------------------------------------------------
-// 簡易 testbench 模板
+// 簡易 testbench 模板（支援 RTL / Gate+SDF）
+// Gate sim: make sim_gate → +define+SDF +define+SDF_FILE="..."
 // ------------------------------------------------------------
 module tb_DESIGN_TOP;
     reg        clk;
@@ -19,7 +20,19 @@ module tb_DESIGN_TOP;
         .out_data (out_data)
     );
 
-    // 時脈
+`ifdef SDF
+    // Gate-level SDF annotate（路徑由 Makefile/script 以 SDF_FILE 傳入）
+    initial begin
+`ifdef SDF_FILE
+        $sdf_annotate(`SDF_FILE, u_dut, , , "MAXIMUM");
+        $display("[TB] SDF annotate: %s", `SDF_FILE);
+`else
+        $display("[TB][WARN] SDF defined but SDF_FILE not set");
+`endif
+    end
+`endif
+
+    // 時脈（預設 10ns；請與 CLK/SDC 對齊）
     initial clk = 1'b0;
     always #5 clk = ~clk;
 
@@ -30,7 +43,6 @@ module tb_DESIGN_TOP;
         repeat (4) @(posedge clk);
         rst = 1'b0;
 
-        // 簡單刺激
         @(posedge clk);
         in_valid = 1'b1;
         in_data  = 8'hA5;

@@ -119,16 +119,35 @@ make pt  TECH=U18      # 請與 syn 使用同一 TECH
 
 詳見 [`lib/README.md`](lib/README.md)。
 
+### Clock 分層（CLK）
+
+```bash
+make syn     CLK=10
+make syn     CLK=6
+make syn_dft CLK=10 TECH=U18
+make pt      CLK=10 TECH=U18
+```
+
+產出目錄範例（`CLK=10` → `clk_10`）：
+
+```text
+syn/netlist/clk_10/${TOP}_syn.v
+syn/netlist/clk_10/${TOP}_syn_dft.v
+syn/report/clk_10/
+syn/dft_report/clk_10/
+```
+
+SDC 優先讀取 `syn/constraint/${TOP}_clk${CLK}.sdc`，否則 `${TOP}.sdc`。
+
 ### 串接關係
 
 ```text
 rtl/src/${TOP}.v
     → spyglass/
-    → syn/netlist/${TOP}_syn.v  (+ ${TOP}_syn.sdc, report/${TOP}.svf)
-         → lec/   (TECH 與 syn 相同)
-         → tmax/
-         → primetime/  (TECH 與 syn 相同)
-         → apr/ (Innovus) → apr/def, apr/gds
+    → syn/netlist/clk_<CLK>/${TOP}_syn.v       (make syn)
+    → syn/netlist/clk_<CLK>/${TOP}_syn_dft.v   (make syn_dft)
+         → lec / pt / apr  （相同 TECH + CLK）
+         → tmax  （優先用 *_syn_dft.v）
 ```
 
 ---
@@ -174,13 +193,23 @@ cp slow.db lib/U18/stdcell/
 cd design_flow
 make help
 make spyglass
-make syn TECH=U18       # compile_ultra → syn/netlist
-make lec TECH=U18
-make tmax
-make pt  TECH=U18
-make apr
+make syn     TECH=U18 CLK=10    # 無 scan
+make syn_dft TECH=U18 CLK=10    # 含 scan chain → dft_report/clk_10
+make sim_gate TECH=U18 CLK=10   # gate sim（預設優先 DFT netlist + SDF）
+make lec     TECH=U18 CLK=10
+make tmax             CLK=10    # 優先讀 *_syn_dft.v
+make pt      TECH=U18 CLK=10
+make apr              CLK=10
 ```
 
+Gate sim 選項：
+
+```bash
+make sim_gate CLK=10 GATE_NET=auto   # 有 DFT 用 DFT，否則 syn
+make sim_gate CLK=10 GATE_NET=syn
+make sim_gate CLK=10 GATE_NET=dft
+make sim_gate CLK=10 TIMING=0        # +notimingcheck
+```
 > 實際 library / lef / mmmc 仍需依你學校或公司環境補齊；腳本已留相對路徑插槽。
 
 ---
@@ -203,9 +232,10 @@ make apr
 - waiver 統一放 `spyglass/waiver/`
 
 ### `syn/` — 合成
-- `compile_ultra`（可加 `-gate_clock`）
-- 輸入：`rtl/` + `syn/constraint/*.sdc`（競賽常見半週期 I/O delay）
-- 輸出：`syn/netlist/*_syn.v`、`*_syn.sdc`、`syn/report/*.svf`
+- `make syn`：`compile_ultra`（無 scan）
+- `make syn_dft`：`compile_ultra -scan` + `insert_dft`（scan chain）
+- 依 `CLK` 分層：`netlist/clk_*`、`report/clk_*`、`dft_report/clk_*`
+- DFT 報告（scan path / dft_drc 等）只放 `dft_report/`
 
 ### `lec/` — Formality（邏輯等價）
 - Golden：RTL／Revised：`syn/netlist/*_syn.v`

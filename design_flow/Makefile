@@ -13,6 +13,10 @@ FILELIST ?= rtl/filelist.f
 
 SIM      ?= vcs
 WORK     ?= work
+GATE_NET ?= auto         # auto | syn | dft（sim_gate 用）
+TIMING   ?= 1            # 1=timing check；0=+notimingcheck
+# 製程 cell verilog（相對路徑；可覆寫）
+TECH_VERILOG ?= lib/$(TECH)/stdcell/typical.v
 
 TCL_SET  = set TOP $(TOP); set TECH $(TECH); set CLK $(CLK)
 
@@ -20,33 +24,38 @@ GREEN := \033[0;32m
 RED   := \033[0;31m
 NC    := \033[0m
 
-.PHONY: help start check_tech sim cov spyglass syn syn_dft lec tmax pt apr clean clean_all
+.PHONY: help start check_tech sim sim_gate cov spyglass syn syn_dft lec tmax pt apr clean clean_all
 
 help:
 	@echo ""
 	@echo "IC Design Flow (cwd = design_flow/)"
 	@echo "  make syn          - 合成（無 scan）"
 	@echo "  make syn_dft      - 合成 + scan chain（DFT）"
-	@echo "  make lec / pt / tmax / apr / spyglass / sim / cov"
+	@echo "  make sim          - RTL 模擬"
+	@echo "  make sim_gate     - Gate-level 模擬（netlist + SDF + tech verilog）"
+	@echo "  make lec / pt / tmax / apr / spyglass / cov"
 	@echo ""
 	@echo "製程 TECH: U18 | TSMC13 | ADFP | TN16 | TN7"
 	@echo "  make syn TECH=U18"
 	@echo ""
 	@echo "Clock 分層 CLK → syn/{netlist,report,dft_report}/clk_<CLK>/"
-	@echo "  make syn     CLK=10"
-	@echo "  make syn     CLK=6"
-	@echo "  make syn_dft CLK=10 TECH=U18"
-	@echo "  make pt      CLK=10 TECH=U18"
+	@echo "  make syn      CLK=10"
+	@echo "  make syn_dft  CLK=10 TECH=U18"
+	@echo "  make sim_gate CLK=10 TECH=U18"
+	@echo "  make sim_gate CLK=10 GATE_NET=dft"
+	@echo "  make sim_gate CLK=10 GATE_NET=syn TIMING=0"
+	@echo "  make pt       CLK=10 TECH=U18"
 	@echo ""
 	@echo "SDC 優先: syn/constraint/\$$(TOP)_clk\$$(CLK).sdc"
 	@echo "         否則 syn/constraint/\$$(TOP).sdc"
 	@echo ""
-	@echo "預設: TOP=$(TOP)  TECH=$(TECH)  CLK=$(CLK)"
+	@echo "預設: TOP=$(TOP)  TECH=$(TECH)  CLK=$(CLK)  GATE_NET=$(GATE_NET)"
 	@echo ""
 
 start:
-	@mkdir -p $(WORK)/sim
+	@mkdir -p $(WORK)/sim $(WORK)/sim_gate/clk_$(CLK)
 	@mkdir -p syn/netlist/clk_$(CLK) syn/report/clk_$(CLK) syn/dft_report/clk_$(CLK)
+	@mkdir -p sim/report/clk_$(CLK)
 	@mkdir -p lec/report/clk_$(CLK) lec/session/clk_$(CLK)
 	@mkdir -p tmax/report/clk_$(CLK) tmax/pattern/clk_$(CLK)
 	@mkdir -p primetime/report/clk_$(CLK) apr/report/clk_$(CLK)
@@ -69,6 +78,14 @@ ifeq ($(SIM),vcs)
 else
 	xrun -sv -f $(FILELIST) $(TB_FILE) | tee $(WORK)/sim/sim.log
 endif
+
+# ---------- Gate-level 模擬 ----------
+sim_gate: start check_tech
+	@chmod +x sim/script/run_sim_gate.sh
+	TOP=$(TOP) TECH=$(TECH) CLK=$(CLK) SIM=$(SIM) \
+	GATE_NET=$(GATE_NET) TIMING=$(TIMING) \
+	TECH_VERILOG=$(TECH_VERILOG) TB_FILE=$(TB_FILE) \
+	bash sim/script/run_sim_gate.sh
 
 cov: start
 	cd cov/script && bash run_cov.sh $(TOP) $(SIM)
@@ -115,6 +132,7 @@ clean:
 
 clean_all: clean
 	@find syn/netlist syn/report syn/dft_report \
+	      sim/report \
 	      lec/report lec/session \
 	      tmax/report tmax/pattern primetime/report primetime/spef \
 	      apr/def apr/gds apr/report cov/report spyglass/report \

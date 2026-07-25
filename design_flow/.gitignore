@@ -17,6 +17,9 @@ csrc/
 urgReport/
 cov_work/
 *.vdb/
+sim/report/**
+!sim/report/.gitkeep
+
 
 # SpyGlass
 spyglass/report/*

@@ -17,9 +17,16 @@ lib/<TECH>/
 ├── setup_dc.tcl      # Design Compiler
 ├── setup_pt.tcl      # PrimeTime
 ├── setup_fm.tcl      # Formality
-└── stdcell/          # 放置該製程 .db / .sdb（相對路徑或 symlink）
+└── stdcell/          # .db / .sdb / typical.v（相對路徑或 symlink）
 ```
 
+Gate-level 模擬需要 cell verilog model，預設讀：
+
+```text
+lib/<TECH>/stdcell/typical.v
+```
+
+可覆寫：`make sim_gate TECH_VERILOG=lib/U18/stdcell/slow.v`
 ## 怎麼選製程
 
 ```bash
