@@ -10,14 +10,15 @@
 #        set TECH_TOOL dc|pt|fm
 #        source common/scripts/load_tech.tcl
 #
-# 製程選擇：TECH（預設 tsmc18），對應 lib/<TECH>/setup_*.tcl
+# 製程選擇：TECH（預設 U18），對應 lib/<TECH>/setup_*.tcl
+# 可用：U18 / TSMC13 / ADFP / TN16 / TN7
 # ============================================================
 
 if {![info exists TOP]} {
     set TOP "DESIGN_TOP"
 }
 if {![info exists TECH]} {
-    set TECH "tsmc18"
+    set TECH "U18"
 }
 
 # ---------- RTL / SIM ----------

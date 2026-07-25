@@ -5,16 +5,17 @@
 #
 # 必要變數：
 #   TECH      - 製程名，對應 lib/<TECH>/
+#               目前：U18 / TSMC13 / ADFP / TN16 / TN7
 #   TECH_TOOL - dc | pt | fm
 #
 # 範例：
-#   set TECH "tsmc18"
+#   set TECH "U18"
 #   set TECH_TOOL "dc"
 #   source common/scripts/load_tech.tcl
 # ============================================================
 
 if {![info exists TECH]} {
-    set TECH "tsmc18"
+    set TECH "U18"
 }
 if {![info exists TECH_TOOL]} {
     set TECH_TOOL "dc"

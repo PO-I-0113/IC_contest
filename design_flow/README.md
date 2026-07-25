@@ -100,19 +100,22 @@ source common/scripts/load_tech.tcl
 ### 製程切換（TECH）
 
 ```bash
-make syn TECH=tsmc18
-make syn TECH=tsmc90
-make syn TECH=tsmc13
-make pt  TECH=tsmc18   # 請與 syn 使用同一 TECH
+make syn TECH=U18
+make syn TECH=TSMC13
+make syn TECH=ADFP
+make syn TECH=TN16
+make syn TECH=TN7
+make pt  TECH=U18      # 請與 syn 使用同一 TECH
 ```
 
 | TECH | Setup 目錄 |
 | :--- | :--- |
-| `tsmc18`（預設） | `lib/tsmc18/` |
-| `tsmc90` | `lib/tsmc90/` |
-| `tsmc13` | `lib/tsmc13/` |
+| `U18`（預設） | `lib/U18/` |
+| `TSMC13` | `lib/TSMC13/` |
+| `ADFP` | `lib/ADFP/` |
+| `TN16` | `lib/TN16/` |
+| `TN7` | `lib/TN7/` |
 
-新增製程：建立 `lib/<name>/`，放入 `setup_dc.tcl` / `setup_pt.tcl` / `setup_fm.tcl`，再 `make syn TECH=<name>`。  
 詳見 [`lib/README.md`](lib/README.md)。
 
 ### 串接關係
@@ -160,8 +163,8 @@ TOP ?= YOUR_MODULE
 ### 3. 放入 library（相對路徑）
 
 ```bash
-# 範例：tsmc18 慢角 db（檔名需對應 lib/tsmc18/setup_dc.tcl）
-cp slow.db lib/tsmc18/stdcell/
+# 範例：U18 慢角 db（檔名需對應 lib/U18/setup_dc.tcl）
+cp slow.db lib/U18/stdcell/
 ```
 
 ### 4. 依序執行（需工作站 EDA license）
@@ -170,10 +173,10 @@ cp slow.db lib/tsmc18/stdcell/
 cd design_flow
 make help
 make spyglass
-make syn TECH=tsmc18    # compile_ultra → syn/netlist
-make lec TECH=tsmc18
+make syn TECH=U18       # compile_ultra → syn/netlist
+make lec TECH=U18
 make tmax
-make pt  TECH=tsmc18
+make pt  TECH=U18
 make apr
 ```
 

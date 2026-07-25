@@ -2,12 +2,12 @@
 # IC Design Flow Makefile (方案 A)
 # 流程: SIM → COV → SpyGlass → SYN → LEC → TMAX → PT → APR(Innovus)
 # 路徑規則: 全部相對 design_flow/
-# 製程切換: make syn TECH=tsmc18
+# 製程切換: make syn TECH=U18
 # ============================================================
 
 # ---------- 使用者設定 ----------
 TOP      ?= DESIGN_TOP
-TECH     ?= tsmc18       # 對應 lib/$(TECH)/setup_*.tcl
+TECH     ?= U18          # U18 | TSMC13 | ADFP | TN16 | TN7
 RTL_FILE ?= rtl/src/$(TOP).v
 TB_FILE  ?= sim/tb/tb_$(TOP).sv
 FILELIST ?= rtl/filelist.f
@@ -39,10 +39,12 @@ help:
 	@echo "  make clean       - 清理 work / log"
 	@echo ""
 	@echo "製程切換 (TECH → lib/<TECH>/setup_*.tcl):"
-	@echo "  make syn TECH=tsmc18"
-	@echo "  make syn TECH=tsmc90"
-	@echo "  make syn TECH=tsmc13"
-	@echo "  make pt  TECH=tsmc18   # 請與 syn 使用相同 TECH"
+	@echo "  make syn TECH=U18"
+	@echo "  make syn TECH=TSMC13"
+	@echo "  make syn TECH=ADFP"
+	@echo "  make syn TECH=TN16"
+	@echo "  make syn TECH=TN7"
+	@echo "  make pt  TECH=U18     # 請與 syn 使用相同 TECH"
 	@echo ""
 	@echo "預設: TOP=$(TOP)  TECH=$(TECH)"
 	@echo "路徑: 請維持相對路徑，勿改成絕對路徑"
@@ -53,16 +55,14 @@ start:
 	@mkdir -p syn/report lec/report tmax/report primetime/report apr/report spyglass/report cov/report
 	@echo "$(GREEN)[INFO]$(NC) work/ and report dirs ready"
 
-# 檢查製程 setup 是否存在
 check_tech:
 	@if [ ! -d "lib/$(TECH)" ]; then \
 		echo "$(RED)[ERROR]$(NC) 找不到製程目錄: lib/$(TECH)"; \
-		echo "        可用: lib/tsmc18 lib/tsmc90 lib/tsmc13 或自建 lib/<name>/"; \
+		echo "        可用: U18 TSMC13 ADFP TN16 TN7 或自建 lib/<name>/"; \
 		exit 1; \
 	fi
 	@echo "$(GREEN)[INFO]$(NC) TECH=$(TECH)  dir=lib/$(TECH)"
 
-# ---------- SIM ----------
 sim: start
 ifeq ($(SIM),vcs)
 	vcs -full64 -sverilog -debug_access+all \
@@ -73,41 +73,33 @@ else
 	xrun -sv -f $(FILELIST) $(TB_FILE) | tee $(WORK)/sim/sim.log
 endif
 
-# ---------- COV ----------
 cov: start
 	cd cov/script && bash run_cov.sh $(TOP) $(SIM)
 
-# ---------- SpyGlass ----------
 spyglass: start
 	cd spyglass/script && sg_shell -x '$(TCL_SET)' -tcl run_spyglass.tcl
 
-# ---------- SYN ----------
 syn: start check_tech
 	@if [ ! -f "lib/$(TECH)/setup_dc.tcl" ]; then \
 		echo "$(RED)[ERROR]$(NC) 缺少 lib/$(TECH)/setup_dc.tcl"; exit 1; \
 	fi
 	cd syn/script && dc_shell -x '$(TCL_SET)' -f run_syn.tcl | tee ../report/syn.log
 
-# ---------- LEC ----------
 lec: start check_tech
 	cd lec/script && fm_shell -x '$(TCL_SET)' -f run_lec.tcl | tee ../report/lec.log
 
-# ---------- TMAX ----------
 tmax: start
 	cd tmax/script && tmax -shell run_tmax.tcl | tee ../report/tmax.log
 
-# ---------- PrimeTime ----------
 pt: start check_tech
 	@if [ ! -f "lib/$(TECH)/setup_pt.tcl" ]; then \
 		echo "$(RED)[ERROR]$(NC) 缺少 lib/$(TECH)/setup_pt.tcl"; exit 1; \
 	fi
 	cd primetime/script && pt_shell -x '$(TCL_SET)' -f run_pt.tcl | tee ../report/pt.log
 
-# ---------- APR (Innovus) ----------
 apr: start
 	cd apr/script && TOP=$(TOP) bash run_apr.sh
 
-# ---------- Clean ----------
 clean:
 	rm -rf $(WORK)
 	rm -f syn/report/*.log lec/report/*.log tmax/report/*.log \

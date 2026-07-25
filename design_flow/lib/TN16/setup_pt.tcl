@@ -1,10 +1,12 @@
 # ============================================================
-# TSMC 130nm 範例 — PrimeTime setup
+# TN16 — PrimeTime setup
+# TSMC N16 / 16nm 類（依貴單位實際 library 調整）
+# 路徑相對 design_flow/
 # ============================================================
 
-puts "INFO: Load PT setup for TECH=tsmc13"
+puts "INFO: Load PT setup for TECH=TN16"
 
-set TECH_DIR "lib/tsmc13"
+set TECH_DIR "lib/TN16"
 set TECH_STDCELL "${TECH_DIR}/stdcell"
 set LINK_LIB_FILE "${TECH_STDCELL}/slow.db"
 

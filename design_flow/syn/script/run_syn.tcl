@@ -1,6 +1,6 @@
 # ============================================================
 # Design Compiler — compile_ultra
-# 執行：make syn TECH=tsmc18
+# 執行：make syn TECH=U18
 # 路徑：一律相對 design_flow/
 # 產出：syn/netlist/${TOP}_syn.v  → 供 LEC / PT / TMAX / APR 串接
 # ============================================================

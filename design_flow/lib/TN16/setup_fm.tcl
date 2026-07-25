@@ -1,16 +1,15 @@
 # ============================================================
-# TSMC 180nm 範例 — Formality setup
+# TN16 — Formality setup
+# TSMC N16 / 16nm 類（依貴單位實際 library 調整）
 # 路徑相對 design_flow/
-# 若 LEC 需要讀 technology library，在此補充
 # ============================================================
 
-puts "INFO: Load Formality setup for TECH=tsmc18"
+puts "INFO: Load Formality setup for TECH=TN16"
 
-set TECH_DIR "lib/tsmc18"
+set TECH_DIR "lib/TN16"
 set TECH_STDCELL "${TECH_DIR}/stdcell"
 
-# 範例（依 Formality 版本調整）：
+# 若 LEC 需要 technology library，在此補充：
 # read_db ${TECH_STDCELL}/slow.db
-# set_app_var search_path ". ${TECH_STDCELL}"
 
 puts "INFO: TECH_STDCELL = $TECH_STDCELL"

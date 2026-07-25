@@ -1,12 +1,13 @@
 # ============================================================
-# TSMC 180nm 範例 — Design Compiler setup
+# ADFP — Design Compiler setup
+# ADFP 製程（依貴單位實際 library 調整）
 # 路徑相對 design_flow/
-# 請把該製程 .db / .sdb 放到 lib/tsmc18/stdcell/（或改下方檔名）
+# 請把該製程 .db / .sdb 放到 lib/ADFP/stdcell/
 # ============================================================
 
-puts "INFO: Load DC setup for TECH=tsmc18"
+puts "INFO: Load DC setup for TECH=ADFP"
 
-set TECH_DIR "lib/tsmc18"
+set TECH_DIR "lib/ADFP"
 set TECH_STDCELL "${TECH_DIR}/stdcell"
 
 # 依你實際放入的檔名修改
@@ -19,8 +20,7 @@ set_app_var target_library "$TARGET_LIB_FILE"
 set_app_var link_library   "* $LINK_LIB_FILE"
 # set_app_var symbol_library "$SYMBOL_LIB_FILE"
 
-# 可選：wire load（依 library 支援情況調整）
+# 可選：wire load / dont_use 等製程相關設定
 # set_wire_load_mode top
-# set_wire_load_model -name "tsmc18_wl10" -library <libname>
 
 puts "INFO: target_library = $TARGET_LIB_FILE"
